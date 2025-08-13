@@ -15,7 +15,7 @@ export function extracaoToken(req: Request, res: Response, next: NextFunction) {
     }
 
     //Verificando o formato do token.
-    if(token.length !== parseInt(process.env.JWT_LENGTH || '256')) {
+    if(token.length !==  JWT_LENGTH) {
         return res.status(401).json({ message: 'Token inválido.' });
     }
 
