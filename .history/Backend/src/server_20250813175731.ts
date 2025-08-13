@@ -1,6 +1,6 @@
 // server.ts
 import express from 'express';
-import router from './api/routes/routesPublic/routes'; // Importando as rotas públicas
+import router from 
 
 const app = express();
 const PORT = 3000;

@@ -18,8 +18,6 @@ enum UserType {
   RESPONSAVEL
 }
 
-
-
 model User {
   id        Int      @id @default(autoincrement())
   name      String
