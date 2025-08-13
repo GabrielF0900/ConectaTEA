@@ -16,12 +16,7 @@ export async function registerUser(req: Request, res: Response) {
         return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
     }
 
-    // Regex mais rigoroso para validação de e-mail
-    const emailTrimmed = email.trim();
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(emailTrimmed)) {
-        return res.status(400).json({ message: 'Email inválido.' });
-    }
+    //Regex para 
 
     // Converter tipo para maiúscula e validar se é válido
     const tipoUpperCase = tipo.toUpperCase();
@@ -35,7 +30,7 @@ export async function registerUser(req: Request, res: Response) {
         //Verifica se o email está registrado no banco de dados.
     const emailExistente = await prisma.user.findUnique({
         where: {
-            email: emailTrimmed
+            email: email
         }
     })
 
@@ -50,7 +45,7 @@ export async function registerUser(req: Request, res: Response) {
     const novoUsuario = await prisma.user.create({
         data: {
             name: name,
-            email: emailTrimmed,
+            email: email,
             password: senhaCriptografada,
             tipo: tipoUpperCase
         }
