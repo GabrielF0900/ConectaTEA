@@ -114,30 +114,10 @@ export default function Cadastro() {
           Criar Conta
         </button>
 
-        {/* Separador */}
-        <div className="flex items-center my-4">
-          <div className="flex-1 h-px bg-gray-300"></div>
-          <span className="px-3 text-sm text-gray-500">ou</span>
-          <div className="flex-1 h-px bg-gray-300"></div>
-        </div>
-
         {/* Já tenho uma conta */}
         <button
           type="button"
-          style={{
-            width: '100%',
-            backgroundColor: 'white',
-            color: '#374151',
-            padding: '12px',
-            borderRadius: '8px',
-            fontWeight: '600',
-            border: '1px solid #d1d5db',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-            marginTop: '16px'
-          }}
-          onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#f9fafb'}
-          onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = 'white'}
+          className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-50 transition mt-4"
           onClick={() => navigate("/login")}
         >
           Já tenho uma conta

@@ -126,21 +126,20 @@ export default function Cadastro() {
           type="button"
           style={{
             width: '100%',
-            backgroundColor: 'white',
-            color: '#374151',
-            padding: '12px',
-            borderRadius: '8px',
-            fontWeight: '600',
-            border: '1px solid #d1d5db',
+            backgroundColor: 'magenta',
+            color: 'yellow',
+            padding: '20px',
+            borderRadius: '20px',
+            fontWeight: '900',
+            fontSize: '2rem',
+            border: '5px solid red',
             cursor: 'pointer',
-            transition: 'background-color 0.2s',
-            marginTop: '16px'
+            marginTop: '40px',
+            transition: 'background-color 0.2s'
           }}
-          onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#f9fafb'}
-          onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = 'white'}
           onClick={() => navigate("/login")}
         >
-          Já tenho uma conta
+          BOTÃO TESTE
         </button>
       </form>
 

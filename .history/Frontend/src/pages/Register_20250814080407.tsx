@@ -121,27 +121,7 @@ export default function Cadastro() {
           <div className="flex-1 h-px bg-gray-300"></div>
         </div>
 
-        {/* Já tenho uma conta */}
-        <button
-          type="button"
-          style={{
-            width: '100%',
-            backgroundColor: 'white',
-            color: '#374151',
-            padding: '12px',
-            borderRadius: '8px',
-            fontWeight: '600',
-            border: '1px solid #d1d5db',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-            marginTop: '16px'
-          }}
-          onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#f9fafb'}
-          onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = 'white'}
-          onClick={() => navigate("/login")}
-        >
-          Já tenho uma conta
-        </button>
+        
       </form>
 
       {/* Rodapé */}
