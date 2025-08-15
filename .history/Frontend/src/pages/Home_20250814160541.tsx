@@ -125,10 +125,7 @@ export default function ConectaTEALanding() {
             Junte-se à comunidade ConectaTEA e comece a fazer a diferença hoje mesmo.
           </p>
           <div className="mt-6">
-            <button 
-              className="px-5 sm:px-6 py-3 rounded-lg bg-white text-green-700 font-semibold hover:bg-white/90 transition inline-flex items-center gap-2"
-              onClick={() => navigate("/register")}
-            >
+            <button className="px-5 sm:px-6 py-3 rounded-lg bg-white text-green-700 font-semibold hover:bg-white/90 transition inline-flex items-center gap-2">
               <span>Criar Conta Gratuita</span>
               <ArrowRight className="size-4" />
             </button>

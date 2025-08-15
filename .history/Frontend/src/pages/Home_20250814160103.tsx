@@ -1,14 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { ArrowRight, MessageCircle, Bot, Heart, Target, TrendingUp, Users } from "lucide-react";
-
 
 // OBS: Este componente presume que Tailwind CSS já está configurado no projeto.
 // Basta importar e usar <ConectaTEALanding /> em sua rota principal.
 
-export default function ConectaTEALanding() {
-  const navigate = useNavigate();
-  
+export default function Home() {
   return (
     <div className="min-h-screen w-full text-gray-800">
       {/* Header */}
@@ -22,16 +18,8 @@ export default function ConectaTEALanding() {
 
           {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <button 
-              className="px-3 sm:px-4 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 transition"
-              onClick={() => navigate("/login")}
-            >
-              Entrar
-            </button>
-            <button 
-              className="px-3 sm:px-4 py-2 text-sm rounded-lg bg-green-500 text-white hover:bg-green-600 transition inline-flex items-center gap-2"
-              onClick={() => navigate("/register")}
-            >
+            <button className="px-3 sm:px-4 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 transition">Entrar</button>
+            <button className="px-3 sm:px-4 py-2 text-sm rounded-lg bg-green-500 text-white hover:bg-green-600 transition inline-flex items-center gap-2">
               <span>Começar Agora</span>
               <ArrowRight className="size-4" />
             </button>
@@ -49,10 +37,7 @@ export default function ConectaTEALanding() {
             autistas com amor e cuidado.
           </p>
           <div className="mt-8">
-            <button 
-              className="px-5 sm:px-6 py-3 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition inline-flex items-center gap-2"
-              onClick={() => navigate("/register")}
-            >
+            <button className="px-5 sm:px-6 py-3 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition inline-flex items-center gap-2">
               <span>Criar Conta</span>
               <ArrowRight className="size-4" />
             </button>
@@ -125,10 +110,7 @@ export default function ConectaTEALanding() {
             Junte-se à comunidade ConectaTEA e comece a fazer a diferença hoje mesmo.
           </p>
           <div className="mt-6">
-            <button 
-              className="px-5 sm:px-6 py-3 rounded-lg bg-white text-green-700 font-semibold hover:bg-white/90 transition inline-flex items-center gap-2"
-              onClick={() => navigate("/register")}
-            >
+            <button className="px-5 sm:px-6 py-3 rounded-lg bg-white text-green-700 font-semibold hover:bg-white/90 transition inline-flex items-center gap-2">
               <span>Criar Conta Gratuita</span>
               <ArrowRight className="size-4" />
             </button>
