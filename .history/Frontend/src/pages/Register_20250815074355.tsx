@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../api/authApi";
+import { register } from "../services/auth";
 
 export default function Cadastro() {
   const [form, setForm] = useState({

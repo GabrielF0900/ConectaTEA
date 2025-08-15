@@ -1,0 +1,2 @@
+//Nesse algoritmo eu irei desenvolver as ligações com frontend e backend no que se refere ao login, registro, logout.
+

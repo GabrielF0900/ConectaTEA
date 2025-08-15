@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../api/authApi";
+import { register } from "../services/auth";
 
 export default function Cadastro() {
   const [form, setForm] = useState({
@@ -35,9 +35,9 @@ export default function Cadastro() {
       alert("Conta criada com sucesso!");
       console.log(response);
       navigate("/login");
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Erro no registro:", error);
-      alert("Erro ao criar conta. Tente novamente.");
+      alert(error.response?.data?.message || "Erro ao criar conta. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -132,10 +132,9 @@ export default function Cadastro() {
         {/* Botão Criar Conta */}
         <button
           type="submit"
-          disabled={loading}
-          className="w-full bg-green-600 text-white p-3 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-green-600 text-white p-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
         >
-          {loading ? "Criando conta..." : "Criar Conta"}
+          Criar Conta
         </button>
 
         {/* Separador */}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../api/authApi";
+import { register } from "../services/auth";
 
 export default function Cadastro() {
   const [form, setForm] = useState({
@@ -37,7 +37,9 @@ export default function Cadastro() {
       navigate("/login");
     } catch (error: unknown) {
       console.error("Erro no registro:", error);
-      alert("Erro ao criar conta. Tente novamente.");
+      const errorMessage = error instanceof Error && 'response' in error && error.response ? 
+        (error.response as any)?.data?.message : "Erro ao criar conta. Tente novamente.";
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,8 @@
 // src/pages/Login.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/authApi";
+// Importe sua função de login (ajuste o caminho conforme sua estrutura)
+import { login } from "../services/auth"; // ajuste o caminho se necessário
 
 export default function Login() {
   const [email, setEmail] = useState("");

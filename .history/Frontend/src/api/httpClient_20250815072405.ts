@@ -1,0 +1,1 @@
+//Algoritmo de base para requisições com axios.
