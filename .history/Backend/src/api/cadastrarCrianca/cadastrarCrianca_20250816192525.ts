@@ -25,13 +25,6 @@ export async function CadastrarCrianca(req: Request, res: Response) {
   const { fullName, age, birthDate, gender, diagnosis, notes, responsible } =
     req.body as CreateChildDTO;
 
-  // Verificar se o objeto responsible existe
-  if (!responsible) {
-    return res.status(400).json({ 
-      message: "Dados do responsável são obrigatórios." 
-    });
-  }
-
   const { name, phone, email, address } = responsible;
 
   // Validação dos campos obrigatórios
@@ -128,30 +121,14 @@ export async function CadastrarCrianca(req: Request, res: Response) {
         data_nascimento: birthDateObj,
         genero: gender,
         diagnostico: diagnosis,
-        observacoes: notes || null,
+        observacoes: notes,
         responsavel_id: responsavel.id,
       },
     });
 
-    return res.status(201).json({ 
-      message: "Criança cadastrada com sucesso!", 
-      crianca: {
-        id: crianca.id,
-        nome: crianca.nome,
-        idade: calculatedAge,
-        data_nascimento: birthDateObj.toLocaleDateString('pt-BR'),
-        genero: crianca.genero,
-        diagnostico: crianca.diagnostico,
-        observacoes: crianca.observacoes,
-        responsavel: {
-          id: responsavel.id,
-          nome: responsavel.name,
-          telefone: responsavel.telefone,
-          email: responsavel.email,
-          endereco: responsavel.endereco
-        }
-      }
-    });
+    return res
+      .status(201)
+      .json({ message: "Criança cadastrada com sucesso!", crianca });
   } catch (error) {
     console.error(error);
     return res

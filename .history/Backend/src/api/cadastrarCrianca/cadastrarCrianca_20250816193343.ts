@@ -25,13 +25,6 @@ export async function CadastrarCrianca(req: Request, res: Response) {
   const { fullName, age, birthDate, gender, diagnosis, notes, responsible } =
     req.body as CreateChildDTO;
 
-  // Verificar se o objeto responsible existe
-  if (!responsible) {
-    return res.status(400).json({ 
-      message: "Dados do responsável são obrigatórios." 
-    });
-  }
-
   const { name, phone, email, address } = responsible;
 
   // Validação dos campos obrigatórios
@@ -147,8 +140,7 @@ export async function CadastrarCrianca(req: Request, res: Response) {
           id: responsavel.id,
           nome: responsavel.name,
           telefone: responsavel.telefone,
-          email: responsavel.email,
-          endereco: responsavel.endereco
+          email: responsavel.email
         }
       }
     });
