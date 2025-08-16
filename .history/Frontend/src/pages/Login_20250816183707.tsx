@@ -17,9 +17,15 @@ export default function Login() {
       localStorage.setItem("token", data.token); // salva o token
       localStorage.setItem("user", JSON.stringify(data.user)); // salva os dados do usuário
       
-      // Redireciona baseado no tipo de usuário usando a configuração de rotas
-      const redirectTo = getDefaultRoute(data.user.tipo);
-      navigate(redirectTo);
+      // Redireciona baseado no tipo de usuário
+      if (data.user.tipo === "PROFISSIONAL") {
+        navigate("/profissional/dashboard");
+      } else if (data.user.tipo === "RESPONSAVEL") {
+        navigate("/responsavel/dashboard");
+      } else {
+        // Fallback para rota antiga se tipo não for reconhecido
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.error("Erro no login:", err);
       alert("Login inválido");

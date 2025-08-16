@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react"
+import { UserType } from '@prisma/client';
 
 
 type Role = { UserType: string } | null; //Tipando o Role e colocando como String
@@ -17,7 +18,6 @@ export default function Dashboard() {
         try {
           const user = JSON.parse(userData);
           setUsuario({ nome: user.name || user.nome || "Usuário" });
-          setRole({ UserType: user.tipo || "Usuário" });
         } catch (error) {
           console.error("Erro ao carregar dados do usuário:", error);
         }

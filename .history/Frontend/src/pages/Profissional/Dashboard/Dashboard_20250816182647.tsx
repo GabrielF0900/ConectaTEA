@@ -1,28 +1,15 @@
 import {useEffect, useState} from "react"
 
 
-type Role = { UserType: string } | null; //Tipando o Role e colocando como String
-type Usuario = { nome: string } |  null; //Tipando o usuario e colocando como String
+type Role = {user}
+type Usuario = { nome: string } | null; //Tipando o usuario e colocando como String
 
 export default function Dashboard() {
   const [usuario, setUsuario] = useState<Usuario>(null);
-  const [role, setRole] = useState<Role>(null);
 
   console.log("Dashboard renderizando...", usuario);
 
-    useEffect(() => {
-      const userData = localStorage.getItem("user");
 
-      if(userData) {
-        try {
-          const user = JSON.parse(userData);
-          setUsuario({ nome: user.name || user.nome || "Usuário" });
-          setRole({ UserType: user.tipo || "Usuário" });
-        } catch (error) {
-          console.error("Erro ao carregar dados do usuário:", error);
-        }
-      }
-    }, [])
 
 
 
@@ -88,7 +75,7 @@ export default function Dashboard() {
             {/* Usuário */}
             <div className="flex items-center gap-2">
               <span className="font-semibold">{usuario?.nome ?? "Usuário"}</span>
-              <span className="px-2 py-1 text-sm bg-green-100 text-green-600 rounded">{role?.UserType ?? "Usuário"}</span>
+              <span className="px-2 py-1 text-sm bg-green-100 text-green-600 rounded">Profissional</span>
             </div>
           </div>
         </div>
