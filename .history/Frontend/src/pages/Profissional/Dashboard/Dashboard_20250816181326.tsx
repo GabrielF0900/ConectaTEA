@@ -10,22 +10,11 @@ export default function Dashboard() {
   console.log("Dashboard renderizando...", usuario);
 
     useEffect(() => {
-      // Primeiro tenta pegar os dados do usuário salvos durante o login
-      const userData = localStorage.getItem("user");
-      
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          setUsuario({ nome: user.name || user.nome || "Usuário" });
-          return;
-        } catch (error) {
-          console.error("Erro ao carregar dados do usuário:", error);
-        }
-      }
-
-      // Se não tem dados do usuário, tenta decodificar o token JWT
+      //Pegando o token do localStorage
       const token = localStorage.getItem("token");
+
       if(token) {
+        // Decodificando o payload do JWT para pegar os dados do usuário
         try {
           const payload = JSON.parse(atob(token.split('.')[1]));
           setUsuario({ nome: payload.nome || payload.name || "Usuário" });
@@ -70,7 +59,7 @@ export default function Dashboard() {
             </button>
             {/* Usuário */}
             <div className="flex items-center gap-2">
-              <span className="font-semibold">{usuario?.nome ?? "Usuário"}</span>
+              <span className="font-semibold">{usuario?.nome ??}</span>
               <span className="px-2 py-1 text-sm bg-green-100 text-green-600 rounded">Profissional</span>
             </div>
           </div>
