@@ -1,32 +1,30 @@
+// src/routes.tsx
 import { Routes, Route } from 'react-router-dom';
-import ProtectedRoute from '../components/ProtectedRoute';
-
-// Páginas públicas
-import Home from '../pages/Home';
+import Cadastro from '../pages/Register';
 import Login from '../pages/Login';
-import Register from '../pages/Register';
-
-// Páginas do Profissional
-import Dashboard from '../pages/Profissional/Dashboard/Dashboard';
+import ConectaTEALanding from '../pages/Home';
+import ProfissionalDashboard from '../pages/Profissional/Dashboard/Dashboard';
+import ProtectedRoute from '../components/ProtectedRoute';
 import CadastrarCriancas from '../pages/Profissional/CadastrarCriancas/CadastrarCriancas';
 
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Rotas Públicas */}
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<ConectaTEALanding />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-
-      {/* Rotas do Profissional */}
+      <Route path="/register" element={<Cadastro />} />
+      
+      {/* Rotas do Profissional - Protegidas */}
       <Route 
         path="/profissional/dashboard" 
         element={
           <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
-            <Dashboard />
+            <ProfissionalDashboard />
           </ProtectedRoute>
         } 
       />
+
+      {/* Nova rota para Cadastro de Crianças */}
       <Route 
         path="/profissional/criancas" 
         element={
@@ -35,26 +33,31 @@ export default function AppRoutes() {
           </ProtectedRoute>
         } 
       />
-
-      {/* Rotas do Responsável */}
+      
+      {/* Rotas do Responsável - Protegidas */}
       <Route 
         path="/responsavel/dashboard" 
         element={
           <ProtectedRoute allowedRoles={['RESPONSAVEL']}>
-            <Dashboard />
+            <div className="p-6 text-center">
+              <h1 className="text-2xl font-bold">Dashboard do Responsável</h1>
+              <p className="text-gray-600 mt-2">Em desenvolvimento...</p>
+            </div>
           </ProtectedRoute>
         } 
       />
-
-      {/* Rota de compatibilidade */}
+      
+      {/* Compatibilidade com rota antiga */}
       <Route 
         path="/dashboard" 
         element={
           <ProtectedRoute allowedRoles={['PROFISSIONAL', 'RESPONSAVEL']}>
-            <Dashboard />
+            <ProfissionalDashboard />
           </ProtectedRoute>
         } 
       />
+      
+      <Route path="*" element={<div>Página não encontrada</div>} />
     </Routes>
   );
 }

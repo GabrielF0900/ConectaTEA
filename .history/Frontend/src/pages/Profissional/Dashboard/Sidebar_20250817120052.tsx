@@ -1,10 +1,10 @@
 // src/components/Sidebar.tsx
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+
+
+
 
 const Sidebar: React.FC = () => {
-  const location = useLocation();
-
   return (
     <aside className="w-64 bg-white border-r hidden md:flex flex-col">
       {/* Logo e título */}
@@ -17,26 +17,10 @@ const Sidebar: React.FC = () => {
 
       {/* Menu lateral */}
       <nav className="flex-1 px-4 py-6 space-y-2">
-        <Link 
-          to="/profissional/dashboard" 
-          className={`flex items-center px-4 py-2 rounded-lg font-medium ${
-            location.pathname === '/profissional/dashboard' 
-              ? 'text-white bg-green-500' 
-              : 'text-gray-600 hover:bg-gray-100'
-          }`}
-        >
+        <a href="#" className="flex items-center px-4 py-2 text-white bg-green-500 rounded-lg font-medium">
           Dashboard
-        </Link>
-        <Link 
-          to="/profissional/criancas" 
-          className={`block px-4 py-2 rounded-lg ${
-            location.pathname === '/profissional/criancas' 
-              ? 'text-white bg-green-500 font-medium' 
-              : 'text-gray-600 hover:bg-gray-100'
-          }`}
-        >
-          Crianças
-        </Link>
+        </a>
+        <a href="" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Crianças</a>
         <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Profissionais</a>
         <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Metas</a>
         <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Progresso</a>
