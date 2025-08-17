@@ -111,17 +111,13 @@ export default function ConectaTEALanding() {
               desc="Chat direto entre responsáveis e profissionais para troca de informações e atualizações."
             />
             <FeatureCard
-              icon={<svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>}
+              icon={<Bot className="size-6" />}
               iconBg="bg-violet-100 text-violet-600"
               title="Assistente IA"
               desc="Inteligência artificial para sugestões personalizadas e análise de progresso automatizada."
             />
             <FeatureCard
-              icon={<svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>}
+              icon={<Heart className="size-6" />}
               iconBg="bg-rose-100 text-rose-600"
               title="Cuidado Personalizado"
               desc="Abordagem individualizada respeitando as necessidades únicas de cada criança autista."

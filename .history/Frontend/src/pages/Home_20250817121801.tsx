@@ -91,9 +91,7 @@ export default function ConectaTEALanding() {
               desc="Defina objetivos específicos e acompanhe o progresso de cada criança de forma individualizada."
             />
             <FeatureCard
-              icon={<svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>}
+              icon={<TrendingUp className="size-6" />}
               iconBg="bg-pink-100 text-pink-600"
               title="Acompanhamento de Progresso"
               desc="Visualize o desenvolvimento através de gráficos e relatórios detalhados e intuitivos."
@@ -103,25 +101,19 @@ export default function ConectaTEALanding() {
           {/* Feature Grid - row 2 */}
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <FeatureCard
-              icon={<svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>}
+              icon={<MessageCircle className="size-6" />}
               iconBg="bg-amber-100 text-amber-600"
               title="Comunicação Integrada"
               desc="Chat direto entre responsáveis e profissionais para troca de informações e atualizações."
             />
             <FeatureCard
-              icon={<svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>}
+              icon={<Bot className="size-6" />}
               iconBg="bg-violet-100 text-violet-600"
               title="Assistente IA"
               desc="Inteligência artificial para sugestões personalizadas e análise de progresso automatizada."
             />
             <FeatureCard
-              icon={<svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>}
+              icon={<Heart className="size-6" />}
               iconBg="bg-rose-100 text-rose-600"
               title="Cuidado Personalizado"
               desc="Abordagem individualizada respeitando as necessidades únicas de cada criança autista."

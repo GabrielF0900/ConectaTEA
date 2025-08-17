@@ -2,13 +2,16 @@ import { Routes, Route } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 // Páginas públicas
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
+import Home from '../pages/Home/Home';
+import Login from '../pages/Login/Login';
+import Register from '../pages/Register/Register';
 
 // Páginas do Profissional
 import Dashboard from '../pages/Profissional/Dashboard/Dashboard';
 import CadastrarCriancas from '../pages/Profissional/CadastrarCriancas/CadastrarCriancas';
+
+// Páginas do Responsável
+import DashboardResponsavel from '../pages/Responsavel/Dashboard/Dashboard';
 
 export default function AppRoutes() {
   return (
@@ -22,7 +25,7 @@ export default function AppRoutes() {
       <Route 
         path="/profissional/dashboard" 
         element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
+          <ProtectedRoute requiredRole="profissional">
             <Dashboard />
           </ProtectedRoute>
         } 
@@ -30,7 +33,7 @@ export default function AppRoutes() {
       <Route 
         path="/profissional/criancas" 
         element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
+          <ProtectedRoute requiredRole="profissional">
             <CadastrarCriancas />
           </ProtectedRoute>
         } 
@@ -40,8 +43,8 @@ export default function AppRoutes() {
       <Route 
         path="/responsavel/dashboard" 
         element={
-          <ProtectedRoute allowedRoles={['RESPONSAVEL']}>
-            <Dashboard />
+          <ProtectedRoute requiredRole="responsavel">
+            <DashboardResponsavel />
           </ProtectedRoute>
         } 
       />
@@ -50,7 +53,7 @@ export default function AppRoutes() {
       <Route 
         path="/dashboard" 
         element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL', 'RESPONSAVEL']}>
+          <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         } 
