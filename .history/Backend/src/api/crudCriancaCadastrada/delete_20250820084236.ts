@@ -20,11 +20,5 @@ export async function DeleteCrianca(req: Request, res: Response) {
     }
 
     //Se ela foi encontrada, ela será excluida.
-    await prisma.crianca.delete({
-        where: { id: criancaId }
-    })
-
-    return res.status(200).json({
-        message: "Criança excluída com sucesso."
-    });
+    await prisma.crianca.delete({})
 }
