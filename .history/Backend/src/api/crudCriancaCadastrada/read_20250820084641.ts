@@ -18,11 +18,5 @@ export async function ReadCrianca(req: Request, res: Response) {
             message: "Criança não encontrada."
         });
     } 
-
-    //Se crianca foi encontrada, retornamos os dados dela.
-    return res.status(200).json({
-        message: "Criança encontrada com sucesso.",
-        data: crianca
-    });
 }
 ''

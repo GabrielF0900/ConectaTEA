@@ -12,17 +12,6 @@ export async function ReadCrianca(req: Request, res: Response) {
         where: { id: criancaId }
     })
 
-    //Validando se criança foi encontrada com sucesso.
-    if(!crianca) {
-        return res.status(404).json({
-            message: "Criança não encontrada."
-        });
-    } 
-
-    //Se crianca foi encontrada, retornamos os dados dela.
-    return res.status(200).json({
-        message: "Criança encontrada com sucesso.",
-        data: crianca
-    });
+    
 }
 ''

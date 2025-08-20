@@ -9,20 +9,7 @@ export async function ReadCrianca(req: Request, res: Response) {
     const criancaId = parseInt(req.params.id);
     //Retornando criança com todos os dados.
     const crianca = await prisma.crianca.findUnique({
-        where: { id: criancaId }
+        
     })
-
-    //Validando se criança foi encontrada com sucesso.
-    if(!crianca) {
-        return res.status(404).json({
-            message: "Criança não encontrada."
-        });
-    } 
-
-    //Se crianca foi encontrada, retornamos os dados dela.
-    return res.status(200).json({
-        message: "Criança encontrada com sucesso.",
-        data: crianca
-    });
 }
 ''
