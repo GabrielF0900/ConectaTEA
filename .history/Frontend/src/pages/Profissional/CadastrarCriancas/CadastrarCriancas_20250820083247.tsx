@@ -104,25 +104,15 @@ export default function CadastrarCriancas() {
   }, []);
 
   // Excluir criança
-  const handleExcluirCrianca = async (criancaId: number) => {
-    const crianca = criancas.find(c => c.id === criancaId);
-    if (!crianca) return;
-
-    const confirmacao = window.confirm(
-      `Tem certeza que deseja excluir a criança "${crianca.nome}"?
-
-Esta ação não poderá ser desfeita.`
-    );
-
-    if (!confirmacao) return;
-
+  const handleExcluir = async (criancaId: number) => {
     try {
-      await excluirCrianca(criancaId);
+      // TODO: Implementar exclusão da criança via API
+      // await excluirCrianca(criancaId);
       
-      // Atualizar lista local removendo a criança excluída
-      const novasCriancas = criancas.filter(c => c.id !== criancaId);
-      setCriancas(novasCriancas);
-      setCriancasFiltradas(novasCriancas);
+      // Por enquanto, apenas remove da lista local
+      const criancasAtualizadas = criancas.filter(crianca => crianca.id !== criancaId);
+      setCriancas(criancasAtualizadas);
+      setCriancasFiltradas(criancasAtualizadas);
       
       alert('Criança excluída com sucesso!');
     } catch (error) {
@@ -248,7 +238,7 @@ Esta ação não poderá ser desfeita.`
               onEditar={(criancaId) => {
                 navigate(`/profissional/criancas/editar/${criancaId}`);
               }}
-              onExcluir={handleExcluirCrianca}
+              onExcluir={handleExcluir}
             />
           ))}
         </div>

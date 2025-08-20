@@ -248,7 +248,7 @@ Esta ação não poderá ser desfeita.`
               onEditar={(criancaId) => {
                 navigate(`/profissional/criancas/editar/${criancaId}`);
               }}
-              onExcluir={handleExcluirCrianca}
+              onExcluir={handleExcluir}
             />
           ))}
         </div>
