@@ -214,10 +214,12 @@ export default function CadastrarCriancas() {
               crianca={crianca}
               profissional={profissional}
               onVerDetalhes={(criancaId) => {
-                navigate(`/profissional/criancas/detalhes/${criancaId}`);
+                console.log('Ver detalhes da criança:', criancaId);
+                // Implementar navegação para página de detalhes
               }}
               onEditar={(criancaId) => {
-                navigate(`/profissional/criancas/editar/${criancaId}`);
+                console.log('Editar criança:', criancaId);
+                // Implementar edição da criança
               }}
             />
           ))}

@@ -15,7 +15,6 @@ interface ProfissionalInfo {
 }
 
 export default function CadastrarCriancas() {
-  const navigate = useNavigate();
   const [criancas, setCriancas] = useState<CriancaListagem[]>([]);
   const [criancasFiltradas, setCriancasFiltradas] = useState<CriancaListagem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -214,10 +213,12 @@ export default function CadastrarCriancas() {
               crianca={crianca}
               profissional={profissional}
               onVerDetalhes={(criancaId) => {
-                navigate(`/profissional/criancas/detalhes/${criancaId}`);
+                console.log('Ver detalhes da criança:', criancaId);
+                // Implementar navegação para página de detalhes
               }}
               onEditar={(criancaId) => {
-                navigate(`/profissional/criancas/editar/${criancaId}`);
+                console.log('Editar criança:', criancaId);
+                // Implementar edição da criança
               }}
             />
           ))}

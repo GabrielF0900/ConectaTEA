@@ -142,7 +142,7 @@ export default function EditarCriancaCadastrada() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           
           {/* Header do Form */}
-          <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +151,7 @@ export default function EditarCriancaCadastrada() {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">Editando: {crianca.nome}</h2>
-                <p className="text-green-100">ID #{crianca.id}</p>
+                <p className="text-blue-100">ID #{crianca.id}</p>
               </div>
             </div>
           </div>
@@ -258,7 +258,7 @@ export default function EditarCriancaCadastrada() {
                   <select
                     required
                     value={formData.parentesco}
-                    onChange={(e) => setFormData({ ...formData, parentesco: e.target.value as 'PAI' | 'MAE' | 'AVO' | 'AVOA' | 'TIO' | 'TIA' | 'TUTOR' | 'OUTRO' })}
+                    onChange={(e) => setFormData({ ...formData, parentesco: e.target.value as any })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="PAI">Pai</option>

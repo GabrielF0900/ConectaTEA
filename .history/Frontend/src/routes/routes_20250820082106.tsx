@@ -37,22 +37,6 @@ export default function AppRoutes() {
           </ProtectedRoute>
         } 
       />
-      <Route 
-        path="/profissional/criancas/detalhes/:id" 
-        element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
-            <VerDetalhesCriancaCadastrada />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/profissional/criancas/editar/:id" 
-        element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
-            <EditarCriancaCadastrada />
-          </ProtectedRoute>
-        } 
-      />
 
       {/* Rotas do Responsável */}
       <Route 

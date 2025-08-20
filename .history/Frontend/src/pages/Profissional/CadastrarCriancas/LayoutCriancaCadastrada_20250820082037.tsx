@@ -82,7 +82,7 @@ const LayoutCriancaCadastrada: React.FC<LayoutCriancaCadastradaProps> = ({
         {/* Botões de ação */}
         <div className="flex gap-2 ml-4">
           <button 
-            onClick={handleVerDetalhes}
+            onClick={() => onVerDetalhes?.(crianca.id)}
             className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm"
           >
             Ver Detalhes
@@ -95,17 +95,6 @@ const LayoutCriancaCadastrada: React.FC<LayoutCriancaCadastradaProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Modal de Detalhes */}
-      <ModalVerDetalhesCriancaCadastrada
-        crianca={crianca}
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onEdit={(id) => {
-          setShowModal(false);
-          onEditar?.(id);
-        }}
-      />
     </div>
   );
 };
