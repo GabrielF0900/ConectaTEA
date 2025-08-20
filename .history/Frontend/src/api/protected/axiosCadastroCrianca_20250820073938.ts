@@ -111,7 +111,6 @@ export const cadastrarCrianca = async (data: CadastroCriancaFormData): Promise<C
     gender: mapGenderToBackend(data.genero),
     diagnosis: diagnosticoFinal,
     notes: data.observacoes,
-    parentesco: data.parentesco,
     responsible: {
       name: data.nomeResponsavel,
       phone: data.telefone,

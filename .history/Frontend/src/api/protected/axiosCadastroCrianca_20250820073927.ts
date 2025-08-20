@@ -32,7 +32,6 @@ export interface CadastroCriancaApiRequest {
   gender: "Masculino" | "Feminino" | "Outro";  // Gênero
   diagnosis: string;         // Diagnóstico final (já processado)
   notes?: string;            // Observações
-  parentesco: string;        // Relação do responsável com a criança
   
   // Dados do responsável (se não existir, será criado)
   responsible: {
@@ -111,7 +110,6 @@ export const cadastrarCrianca = async (data: CadastroCriancaFormData): Promise<C
     gender: mapGenderToBackend(data.genero),
     diagnosis: diagnosticoFinal,
     notes: data.observacoes,
-    parentesco: data.parentesco,
     responsible: {
       name: data.nomeResponsavel,
       phone: data.telefone,

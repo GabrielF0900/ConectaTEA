@@ -382,27 +382,6 @@ export default function CadastrarCriancas() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Parentesco <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      required
-                      value={formData.parentesco}
-                      onChange={(e) => setFormData({ ...formData, parentesco: e.target.value as 'PAI' | 'MAE' | 'AVO' | 'AVOA' | 'TIO' | 'TIA' | 'TUTOR' | 'OUTRO' })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                    >
-                      <option value="PAI">Pai</option>
-                      <option value="MAE">Mãe</option>
-                      <option value="AVO">Avô</option>
-                      <option value="AVOA">Avó</option>
-                      <option value="TIO">Tio</option>
-                      <option value="TIA">Tia</option>
-                      <option value="TUTOR">Tutor/Responsável Legal</option>
-                      <option value="OUTRO">Outro</option>
-                    </select>
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       E-mail
                     </label>
                     <input
