@@ -43,11 +43,11 @@ export async function CadastrarCrianca(req: Request, res: Response) {
   console.log("Dados do responsável:", { name, phone, email, address });
 
   // Validação dos campos obrigatórios
-  if (!fullName || !birthDate || !gender || !diagnosis || !parentesco || !name || !phone) {
+  if (!fullName || !birthDate || !gender || !diagnosis || !name || !phone) {
     console.log("❌ Erro: Campos obrigatórios faltando");
-    console.log("Campos recebidos:", { fullName, birthDate, gender, diagnosis, parentesco, name, phone });
+    console.log("Campos recebidos:", { fullName, birthDate, gender, diagnosis, name, phone });
     return res.status(400).json({ 
-      message: "Campos obrigatórios: Nome Completo, Data de Nascimento, Gênero, Diagnóstico, Parentesco, Nome do Responsável e Telefone." 
+      message: "Campos obrigatórios: Nome Completo, Data de Nascimento, Gênero, Diagnóstico, Nome do Responsável e Telefone." 
     });
   }
 
@@ -223,7 +223,6 @@ export async function CadastrarCrianca(req: Request, res: Response) {
         data_nascimento: birthDateObj,
         genero: gender,
         diagnostico: diagnosis,
-        parentesco: parentesco,
         observacoes: notes || null,
         responsavel_id: responsavel.id,
       },

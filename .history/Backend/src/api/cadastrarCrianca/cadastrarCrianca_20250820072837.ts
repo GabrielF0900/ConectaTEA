@@ -223,7 +223,6 @@ export async function CadastrarCrianca(req: Request, res: Response) {
         data_nascimento: birthDateObj,
         genero: gender,
         diagnostico: diagnosis,
-        parentesco: parentesco,
         observacoes: notes || null,
         responsavel_id: responsavel.id,
       },
