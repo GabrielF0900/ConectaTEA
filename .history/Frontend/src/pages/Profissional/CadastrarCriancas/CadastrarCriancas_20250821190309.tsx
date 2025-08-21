@@ -176,29 +176,8 @@ export default function CadastrarCriancas() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Debug: verificar dados antes do envio
-      console.log('Dados do formulário antes do envio:', formData);
-      
-      // Criar uma cópia profunda dos dados para evitar referências
-      const dadosParaEnvio = {
-        nomeCompleto: String(formData.nomeCompleto).trim(),
-        idade: Number(formData.idade) || 0,
-        dataNascimento: String(formData.dataNascimento).trim(),
-        genero: formData.genero,
-        diagnostico: String(formData.diagnostico).trim(),
-        diagnosticoOutro: String(formData.diagnosticoOutro || '').trim(),
-        nomeResponsavel: String(formData.nomeResponsavel).trim(),
-        telefone: String(formData.telefone).trim(),
-        email: String(formData.email || '').trim(),
-        endereco: String(formData.endereco || '').trim(),
-        parentesco: formData.parentesco,
-        observacoes: String(formData.observacoes || '').trim()
-      };
-      
-      console.log('Dados processados para envio:', dadosParaEnvio);
-      
       // Usar a função de cadastro com tipagem correta
-      await cadastrarCrianca(dadosParaEnvio);
+      await cadastrarCrianca(formData);
       
       // Limpar formulário e fechar modal
       setFormData(getInitialFormData());
@@ -251,7 +230,7 @@ export default function CadastrarCriancas() {
             </div>
             {/* Botão Nova Criança */}
             <button
-              onClick={abrirModalCadastro}
+              onClick={() => setShowModal(true)}
               className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
             >
               <span className="text-lg">+</span>
@@ -301,7 +280,7 @@ export default function CadastrarCriancas() {
             <>
               <p className="text-gray-500">Nenhuma criança cadastrada ainda.</p>
               <button
-                onClick={abrirModalCadastro}
+                onClick={() => setShowModal(true)}
                 className="mt-4 text-blue-600 hover:text-blue-800"
               >
                 Cadastrar primeira criança
@@ -335,7 +314,7 @@ export default function CadastrarCriancas() {
             {/* Header do Modal */}
             <div className="flex items-center p-6 border-b bg-white">
               <button
-                onClick={fecharModal}
+                onClick={() => setShowModal(false)}
                 className="mr-4 text-gray-500 hover:text-gray-700 text-xl"
               >
                 ←
@@ -554,7 +533,7 @@ export default function CadastrarCriancas() {
               <div className="flex gap-4 pt-6 border-t border-gray-200">
                 <button
                   type="button"
-                  onClick={fecharModal}
+                  onClick={() => setShowModal(false)}
                   className="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
                 >
                   Cancelar

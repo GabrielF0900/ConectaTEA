@@ -49,9 +49,7 @@ export default function CadastrarCriancas() {
   };
 
   const [profissional] = useState<ProfissionalInfo>(getProfissionalInfo());
-  
-  // Função para criar um estado inicial limpo do formulário
-  const getInitialFormData = (): CadastroCriancaFormData => ({
+  const [formData, setFormData] = useState<CadastroCriancaFormData>({
     nomeCompleto: '',
     idade: 0,
     dataNascimento: '',
@@ -65,20 +63,6 @@ export default function CadastrarCriancas() {
     parentesco: 'PAI',
     observacoes: ''
   });
-
-  const [formData, setFormData] = useState<CadastroCriancaFormData>(getInitialFormData());
-
-  // Função para abrir o modal e garantir formulário limpo
-  const abrirModalCadastro = () => {
-    setFormData(getInitialFormData());
-    setShowModal(true);
-  };
-
-  // Função para fechar o modal e limpar formulário
-  const fecharModal = () => {
-    setFormData(getInitialFormData());
-    setShowModal(false);
-  };
 
   // Buscar crianças do profissional
   const fetchCriancas = async () => {
@@ -105,32 +89,23 @@ export default function CadastrarCriancas() {
   };
 
   // Filtrar crianças baseado no termo de busca
-  useEffect(() => {
-    if (!searchTerm.trim()) {
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    if (!term.trim()) {
       setCriancasFiltradas(criancas);
       return;
     }
 
     const filtered = criancas.filter(crianca => 
-      crianca.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      crianca.diagnostico.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      crianca.responsavel.nome.toLowerCase().includes(searchTerm.toLowerCase())
+      crianca.nome.toLowerCase().includes(term.toLowerCase()) ||
+      crianca.diagnostico.toLowerCase().includes(term.toLowerCase()) ||
+      crianca.responsavel.nome.toLowerCase().includes(term.toLowerCase())
     );
     setCriancasFiltradas(filtered);
-  }, [searchTerm, criancas]);
+  };
 
   useEffect(() => {
     fetchCriancas();
-  }, []);
-
-  // Adicionar listener para recarregar quando voltar para a página
-  useEffect(() => {
-    const handleFocus = () => {
-      fetchCriancas();
-    };
-
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   // Excluir criança
@@ -176,33 +151,25 @@ export default function CadastrarCriancas() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Debug: verificar dados antes do envio
-      console.log('Dados do formulário antes do envio:', formData);
-      
-      // Criar uma cópia profunda dos dados para evitar referências
-      const dadosParaEnvio = {
-        nomeCompleto: String(formData.nomeCompleto).trim(),
-        idade: Number(formData.idade) || 0,
-        dataNascimento: String(formData.dataNascimento).trim(),
-        genero: formData.genero,
-        diagnostico: String(formData.diagnostico).trim(),
-        diagnosticoOutro: String(formData.diagnosticoOutro || '').trim(),
-        nomeResponsavel: String(formData.nomeResponsavel).trim(),
-        telefone: String(formData.telefone).trim(),
-        email: String(formData.email || '').trim(),
-        endereco: String(formData.endereco || '').trim(),
-        parentesco: formData.parentesco,
-        observacoes: String(formData.observacoes || '').trim()
-      };
-      
-      console.log('Dados processados para envio:', dadosParaEnvio);
-      
       // Usar a função de cadastro com tipagem correta
-      await cadastrarCrianca(dadosParaEnvio);
+      await cadastrarCrianca(formData);
       
       // Limpar formulário e fechar modal
-      setFormData(getInitialFormData());
-      fecharModal();
+      setFormData({
+        nomeCompleto: '',
+        idade: 0,
+        dataNascimento: '',
+        genero: 'Masculino',
+        diagnostico: '',
+        diagnosticoOutro: '',
+        nomeResponsavel: '',
+        telefone: '',
+        email: '',
+        endereco: '',
+        parentesco: 'PAI',
+        observacoes: ''
+      });
+      setShowModal(false);
       
       // Recarregar lista
       fetchCriancas();
@@ -251,7 +218,7 @@ export default function CadastrarCriancas() {
             </div>
             {/* Botão Nova Criança */}
             <button
-              onClick={abrirModalCadastro}
+              onClick={() => setShowModal(true)}
               className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
             >
               <span className="text-lg">+</span>
@@ -277,8 +244,23 @@ export default function CadastrarCriancas() {
 
       {/* Conteúdo principal */}
       <div className="p-6">
-        {/* Filtros adicionais */}
-        <div className="mb-6 flex items-center gap-2">
+        {/* Estatísticas ou filtros adicionais podem ir aqui */}
+        <div className="relative flex-1 max-w-md">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar crianças..."
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        
+        <div className="flex items-center gap-2">
           <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
@@ -286,22 +268,23 @@ export default function CadastrarCriancas() {
             Filtros
           </button>
         </div>
+      </div>
 
-        {/* Lista de Crianças */}
-        {isLoading ? (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-            <p className="text-gray-500 mt-2">Carregando crianças...</p>
-          </div>
-        ) : criancasFiltradas.length === 0 ? (
-          <div className="text-center py-8">
+      {/* Lista de Crianças */}
+      {isLoading ? (
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-500 mt-2">Carregando crianças...</p>
+        </div>
+      ) : criancasFiltradas.length === 0 ? (
+        <div className="text-center py-8">
           {searchTerm ? (
             <p className="text-gray-500">Nenhuma criança encontrada para "{searchTerm}".</p>
           ) : (
             <>
               <p className="text-gray-500">Nenhuma criança cadastrada ainda.</p>
               <button
-                onClick={abrirModalCadastro}
+                onClick={() => setShowModal(true)}
                 className="mt-4 text-blue-600 hover:text-blue-800"
               >
                 Cadastrar primeira criança
@@ -335,7 +318,7 @@ export default function CadastrarCriancas() {
             {/* Header do Modal */}
             <div className="flex items-center p-6 border-b bg-white">
               <button
-                onClick={fecharModal}
+                onClick={() => setShowModal(false)}
                 className="mr-4 text-gray-500 hover:text-gray-700 text-xl"
               >
                 ←
@@ -554,7 +537,7 @@ export default function CadastrarCriancas() {
               <div className="flex gap-4 pt-6 border-t border-gray-200">
                 <button
                   type="button"
-                  onClick={fecharModal}
+                  onClick={() => setShowModal(false)}
                   className="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
                 >
                   Cancelar
@@ -571,19 +554,18 @@ export default function CadastrarCriancas() {
         </div>
       )}
 
-        {/* Barra de Confirmação */}
-        <BarraConfirmacao
-          isOpen={confirmacao.isOpen}
-          titulo={confirmacao.titulo}
-          mensagem={confirmacao.mensagem}
-          textoBotaoConfirmar={confirmacao.textoBotaoConfirmar}
-          textoBotaoCancelar={confirmacao.textoBotaoCancelar}
-          tipoConfirmacao={confirmacao.tipoConfirmacao}
-          onConfirmar={confirmacao.onConfirmar}
-          onCancelar={confirmacao.onCancelar}
-          position="top-center"
-        />
-      </div>
+      {/* Barra de Confirmação */}
+      <BarraConfirmacao
+        isOpen={confirmacao.isOpen}
+        titulo={confirmacao.titulo}
+        mensagem={confirmacao.mensagem}
+        textoBotaoConfirmar={confirmacao.textoBotaoConfirmar}
+        textoBotaoCancelar={confirmacao.textoBotaoCancelar}
+        tipoConfirmacao={confirmacao.tipoConfirmacao}
+        onConfirmar={confirmacao.onConfirmar}
+        onCancelar={confirmacao.onCancelar}
+        position="top-center"
+      />
     </div>
   );
 }

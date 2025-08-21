@@ -1,6 +1,7 @@
 // src/components/Sidebar.tsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import Profissionais
 const Sidebar: React.FC = () => {
   const location = useLocation();
 
@@ -28,30 +29,21 @@ const Sidebar: React.FC = () => {
         </Link>
         <Link 
           to="/profissional/criancas" 
-          className={`flex items-center px-4 py-2 rounded-lg font-medium ${
+          className={`block px-4 py-2 rounded-lg ${
             location.pathname === '/profissional/criancas' 
-              ? 'text-white bg-green-500' 
+              ? 'text-white bg-green-500 font-medium' 
               : 'text-gray-600 hover:bg-gray-100'
           }`}
         >
           Crianças
         </Link>
-        <Link 
-          to="/profissional/profissionais" 
-          className={`flex items-center px-4 py-2 rounded-lg font-medium ${
-            location.pathname === '/profissional/profissionais' 
-              ? 'text-white bg-green-500' 
-              : 'text-gray-600 hover:bg-gray-100'
-          }`}
-        >
-          Profissionais
-        </Link>
-        <a href="#" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium">Metas</a>
-        <a href="#" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium">Progresso</a>
-        <a href="#" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium">Sessões</a>
-        <a href="#" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium">Chat</a>
-        <a href="#" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium">IA</a>
-        <a href="#" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium">Configurações</a>
+        <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Profissionais</a>
+        <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Metas</a>
+        <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Progresso</a>
+        <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Sessões</a>
+        <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Chat</a>
+        <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">IA</a>
+        <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Configurações</a>
       </nav>
 
       {/* Botão sair */}

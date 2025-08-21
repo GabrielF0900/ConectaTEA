@@ -132,26 +132,90 @@ export async function CadastrarCrianca(req: Request, res: Response) {
     console.log("🔍 Procurando responsável existente...");
     console.log("Critérios de busca - Nome:", name, "Email:", email, "Telefone:", phone);
     
-    // Não reutilizar responsáveis para evitar compartilhamento indevido
-    // Sempre criar um novo responsável para cada criança
-    console.log("📝 Criando novo responsável para garantir isolamento...");
-    
-    const userData: any = {
-      name,
-      telefone: phone,
-      password: "senha-temporaria",
-      tipo: "RESPONSAVEL",
-    };
-    if (email) userData.email = email;
-    if (address) userData.endereco = address;
-    
-    console.log("Dados para criação:", userData);
-    
-    const responsavel = await prisma.user.create({
-      data: userData,
+    // Debug: verificar todos os usuários com esse telefone
+    const usuariosComTelefone = await prisma.user.findMany({
+      where: { telefone: phone },
+      select: { id: true, name: true, email: true, telefone: true, tipo: true }
     });
+    console.log("🔍 Usuários encontrados com telefone", phone, ":", usuariosComTelefone);
     
-    console.log("✅ Responsável criado:", responsavel.id);
+    // Debug: verificar se existe usuário com esse email
+    if (email) {
+      const usuarioComEmail = await prisma.user.findFirst({
+        where: { email: email },
+        select: { id: true, name: true, email: true, telefone: true, tipo: true }
+      });
+      console.log("🔍 Usuário encontrado com email", email, ":", usuarioComEmail);
+    }
+    
+    // Procurar responsável existente com TODOS os dados iguais (nome, telefone e email)
+    let responsavel = await prisma.user.findFirst({
+      where: {
+        AND: [
+          { name: name },
+          { telefone: phone },
+          ...(email ? [{ email: email }] : [{ email: null }]),
+          { tipo: "RESPONSAVEL" }
+        ]
+      },
+    });
+
+    console.log("Resultado da busca:", responsavel ? "Encontrado" : "Não encontrado");
+    if (responsavel) {
+      console.log("✅ Responsável encontrado com dados idênticos:", {
+        id: responsavel.id,
+        name: responsavel.name,
+        email: responsavel.email,
+        telefone: responsavel.telefone
+      });
+    }
+
+    if (!responsavel) {
+      console.log("📝 Responsável não encontrado diretamente...");
+      
+      // Verificar se existe um usuário com esse email
+      if (email) {
+        const usuarioExistente = await prisma.user.findFirst({
+          where: { email: email }
+        });
+        
+        if (usuarioExistente) {
+          console.log("🔄 Encontrei usuário com mesmo email, vou atualizar o telefone...");
+          // Atualizar o telefone do usuário existente
+          responsavel = await prisma.user.update({
+            where: { id: usuarioExistente.id },
+            data: { 
+              telefone: phone,
+              name: name, // Atualizar nome também
+              endereco: address || usuarioExistente.endereco,
+              tipo: "RESPONSAVEL" // Garantir que seja responsável
+            }
+          });
+          console.log("✅ Responsável atualizado:", responsavel.id);
+        }
+      }
+      
+      // Se ainda não temos responsável, criar um novo
+      if (!responsavel) {
+        console.log("📝 Criando novo responsável...");
+        const userData: any = {
+          name,
+          telefone: phone,
+          password: "senha-temporaria",
+          tipo: "RESPONSAVEL",
+        };
+        if (email) userData.email = email;
+        if (address) userData.endereco = address;
+        
+        console.log("Dados para criação:", userData);
+        
+        responsavel = await prisma.user.create({
+          data: userData,
+        });
+        
+        console.log("✅ Responsável criado:", responsavel.id);
+      }
+    }
 
     // Cadastrar criança vinculada ao responsável
     const crianca = await prisma.crianca.create({

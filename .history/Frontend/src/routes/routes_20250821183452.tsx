@@ -13,6 +13,7 @@ import VerDetalhesCriancaCadastrada from '../pages/Profissional/CadastrarCrianca
 import EditarCriancaCadastrada from '../pages/Profissional/CadastrarCriancas/EditarCriancaCadastrada';
 import Profissionais from '../pages/Profissional/Profissionais/Profissionais';
 
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -55,15 +56,6 @@ export default function AppRoutes() {
         } 
       />
 
-      <Route 
-        path="/profissional/profissionais" 
-        element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
-            <Profissionais />
-          </ProtectedRoute>
-        } 
-      />
-
       {/* Rotas do Responsável */}
       <Route 
         path="/responsavel/dashboard" 
@@ -73,7 +65,6 @@ export default function AppRoutes() {
           </ProtectedRoute>
         } 
       />
-
 
       {/* Rota de compatibilidade */}
       <Route 

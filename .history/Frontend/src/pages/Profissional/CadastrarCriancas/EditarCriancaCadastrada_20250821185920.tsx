@@ -83,7 +83,7 @@ export default function EditarCriancaCadastrada() {
   }, [id, navigate, notificarErro]);
 
   // Função para atualizar dados do formulário de forma isolada
-  const updateFormData = (field: keyof CadastroCriancaFormData, value: string | number) => {
+  const updateFormData = (field: string, value: any) => {
     setFormData(prevFormData => ({
       ...prevFormData,
       [field]: value
@@ -91,7 +91,7 @@ export default function EditarCriancaCadastrada() {
   };
 
   // Função para atualizar dados aninhados do responsável
-  const updateResponsavelData = (field: keyof CadastroCriancaFormData, value: string) => {
+  const updateResponsavelData = (field: string, value: any) => {
     setFormData(prevFormData => ({
       ...prevFormData,
       [field]: value

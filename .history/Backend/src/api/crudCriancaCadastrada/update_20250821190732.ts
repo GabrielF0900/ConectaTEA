@@ -43,23 +43,15 @@ export async function UpdateCrianca(req: Request, res: Response) {
                 console.log("🔄 Dados do responsável alterados, verificando se precisa criar novo...");
                 
                 // Verificar se existe outro responsável com esses dados exatos
-                const whereCondition: any = {
-                    AND: [
-                        { name: responsavel.nome },
-                        { telefone: responsavel.telefone },
-                        { tipo: "RESPONSAVEL" }
-                    ]
-                };
-
-                // Adicionar condição de email corretamente
-                if (responsavel.email) {
-                    whereCondition.AND.push({ email: responsavel.email });
-                } else {
-                    whereCondition.AND.push({ email: null });
-                }
-
                 const responsavelExistente = await prisma.user.findFirst({
-                    where: whereCondition
+                    where: {
+                        AND: [
+                            { name: responsavel.nome },
+                            { telefone: responsavel.telefone },
+                            ...(responsavel.email ? [{ email: responsavel.email }] : [{ email: null }]),
+                            { tipo: "RESPONSAVEL" }
+                        ]
+                    }
                 });
 
                 if (responsavelExistente) {

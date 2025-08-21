@@ -82,55 +82,54 @@ export default function Profissionais() {
           </button>
         </div>
 
-        {/* Lista de Profissionais */}
-        <div className="space-y-4">
-          {profissionais.map((prof) => (
-            <div
-              key={prof.id}
-              className="bg-white rounded-2xl shadow-sm border p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4"
-            >
-              <div className="flex-1">
-                <h2 className="text-lg font-bold flex items-center gap-2 mb-2">
-                  {prof.nome}
-                  <span className="text-sm bg-blue-100 text-blue-600 px-2 py-0.5 rounded-lg">
-                    {prof.especialidade}
-                  </span>
-                  <span className="text-sm bg-black text-white px-2 py-0.5 rounded-lg">
-                    Ativo
-                  </span>
-                </h2>
-                <p className="text-gray-600 mb-1">{prof.email}</p>
-                <p className="text-gray-600 mb-2">{prof.telefone}</p>
-                <div className="text-sm text-gray-700">
-                  <p className="mb-1">
-                    Crianças atendidas:{" "}
-                    <span className="font-medium">{prof.criancasAtendidas}</span>
-                  </p>
-                  <p className="mb-2">Data de ingresso: {prof.dataIngresso}</p>
-                  <p className="mb-1">Crianças atuais:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {prof.criancas.map((crianca, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-0.5 bg-gray-100 rounded-lg text-sm"
-                      >
-                        {crianca}
-                      </span>
-                    ))}
-                  </div>
+      {/* Lista de Profissionais */}
+      <div className="space-y-4">
+        {profissionais.map((prof) => (
+          <div
+            key={prof.id}
+            className="bg-white rounded-2xl shadow-sm border p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4"
+          >
+            <div className="flex-1">
+              <h2 className="text-lg font-bold flex items-center gap-2 mb-2">
+                {prof.nome}
+                <span className="text-sm bg-blue-100 text-blue-600 px-2 py-0.5 rounded-lg">
+                  {prof.especialidade}
+                </span>
+                <span className="text-sm bg-black text-white px-2 py-0.5 rounded-lg">
+                  Ativo
+                </span>
+              </h2>
+              <p className="text-gray-600 mb-1">{prof.email}</p>
+              <p className="text-gray-600 mb-2">{prof.telefone}</p>
+              <div className="text-sm text-gray-700">
+                <p className="mb-1">
+                  Crianças atendidas:{" "}
+                  <span className="font-medium">{prof.criancasAtendidas}</span>
+                </p>
+                <p className="mb-2">Data de ingresso: {prof.dataIngresso}</p>
+                <p className="mb-1">Crianças atuais:</p>
+                <div className="flex flex-wrap gap-2">
+                  {prof.criancas.map((crianca, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-0.5 bg-gray-100 rounded-lg text-sm"
+                    >
+                      {crianca}
+                    </span>
+                  ))}
                 </div>
               </div>
-              <div className="flex gap-2 self-end sm:self-auto">
-                <button className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">
-                  Ver Perfil
-                </button>
-                <button className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">
-                  Editar
-                </button>
-              </div>
             </div>
-          ))}
-        </div>
+            <div className="flex gap-2 self-end sm:self-auto">
+              <button className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">
+                Ver Perfil
+              </button>
+              <button className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">
+                Editar
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

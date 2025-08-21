@@ -82,22 +82,6 @@ export default function EditarCriancaCadastrada() {
     }
   }, [id, navigate, notificarErro]);
 
-  // Função para atualizar dados do formulário de forma isolada
-  const updateFormData = (field: keyof CadastroCriancaFormData, value: string | number) => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [field]: value
-    }));
-  };
-
-  // Função para atualizar dados aninhados do responsável
-  const updateResponsavelData = (field: keyof CadastroCriancaFormData, value: string) => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [field]: value
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -226,7 +210,7 @@ export default function EditarCriancaCadastrada() {
                     type="text"
                     required
                     value={formData.nomeCompleto}
-                    onChange={(e) => updateFormData('nomeCompleto', e.target.value)}
+                    onChange={(e) => setFormData({ ...formData, nomeCompleto: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -241,7 +225,7 @@ export default function EditarCriancaCadastrada() {
                     min="0"
                     max="18"
                     value={formData.idade}
-                    onChange={(e) => updateFormData('idade', parseInt(e.target.value) || 0)}
+                    onChange={(e) => setFormData({ ...formData, idade: parseInt(e.target.value) || 0 })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -254,7 +238,7 @@ export default function EditarCriancaCadastrada() {
                     type="date"
                     required
                     value={formData.dataNascimento}
-                    onChange={(e) => updateFormData('dataNascimento', e.target.value)}
+                    onChange={(e) => setFormData({ ...formData, dataNascimento: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -266,7 +250,7 @@ export default function EditarCriancaCadastrada() {
                   <select
                     required
                     value={formData.genero}
-                    onChange={(e) => updateFormData('genero', e.target.value as 'Masculino' | 'Feminino' | 'Outro' | 'Prefiro não informar')}
+                    onChange={(e) => setFormData({ ...formData, genero: e.target.value as 'Masculino' | 'Feminino' | 'Outro' | 'Prefiro não informar' })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Masculino">Masculino</option>
@@ -284,7 +268,7 @@ export default function EditarCriancaCadastrada() {
                     type="text"
                     required
                     value={formData.diagnostico}
-                    onChange={(e) => updateFormData('diagnostico', e.target.value)}
+                    onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -303,7 +287,7 @@ export default function EditarCriancaCadastrada() {
                     type="text"
                     required
                     value={formData.nomeResponsavel}
-                    onChange={(e) => updateResponsavelData('nomeResponsavel', e.target.value)}
+                    onChange={(e) => setFormData({ ...formData, nomeResponsavel: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -315,7 +299,7 @@ export default function EditarCriancaCadastrada() {
                   <select
                     required
                     value={formData.parentesco}
-                    onChange={(e) => updateResponsavelData('parentesco', e.target.value as 'PAI' | 'MAE' | 'AVO' | 'AVOA' | 'TIO' | 'TIA' | 'TUTOR' | 'OUTRO')}
+                    onChange={(e) => setFormData({ ...formData, parentesco: e.target.value as 'PAI' | 'MAE' | 'AVO' | 'AVOA' | 'TIO' | 'TIA' | 'TUTOR' | 'OUTRO' })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="PAI">Pai</option>
@@ -337,7 +321,7 @@ export default function EditarCriancaCadastrada() {
                     type="tel"
                     required
                     value={formData.telefone}
-                    onChange={(e) => updateResponsavelData('telefone', e.target.value)}
+                    onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -349,7 +333,7 @@ export default function EditarCriancaCadastrada() {
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) => updateResponsavelData('email', e.target.value)}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -361,7 +345,7 @@ export default function EditarCriancaCadastrada() {
               <h3 className="text-lg font-semibold text-gray-900 mb-6">Observações</h3>
               <textarea
                 value={formData.observacoes}
-                onChange={(e) => updateFormData('observacoes', e.target.value)}
+                onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 rows={4}
                 placeholder="Informações adicionais sobre a criança..."

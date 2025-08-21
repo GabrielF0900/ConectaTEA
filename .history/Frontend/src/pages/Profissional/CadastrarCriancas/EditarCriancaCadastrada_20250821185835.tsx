@@ -83,7 +83,7 @@ export default function EditarCriancaCadastrada() {
   }, [id, navigate, notificarErro]);
 
   // Função para atualizar dados do formulário de forma isolada
-  const updateFormData = (field: keyof CadastroCriancaFormData, value: string | number) => {
+  const updateFormData = (field: string, value: any) => {
     setFormData(prevFormData => ({
       ...prevFormData,
       [field]: value
@@ -91,7 +91,7 @@ export default function EditarCriancaCadastrada() {
   };
 
   // Função para atualizar dados aninhados do responsável
-  const updateResponsavelData = (field: keyof CadastroCriancaFormData, value: string) => {
+  const updateResponsavelData = (field: string, value: any) => {
     setFormData(prevFormData => ({
       ...prevFormData,
       [field]: value
@@ -303,7 +303,7 @@ export default function EditarCriancaCadastrada() {
                     type="text"
                     required
                     value={formData.nomeResponsavel}
-                    onChange={(e) => updateResponsavelData('nomeResponsavel', e.target.value)}
+                    onChange={(e) => setFormData({ ...formData, nomeResponsavel: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -315,7 +315,7 @@ export default function EditarCriancaCadastrada() {
                   <select
                     required
                     value={formData.parentesco}
-                    onChange={(e) => updateResponsavelData('parentesco', e.target.value as 'PAI' | 'MAE' | 'AVO' | 'AVOA' | 'TIO' | 'TIA' | 'TUTOR' | 'OUTRO')}
+                    onChange={(e) => setFormData({ ...formData, parentesco: e.target.value as 'PAI' | 'MAE' | 'AVO' | 'AVOA' | 'TIO' | 'TIA' | 'TUTOR' | 'OUTRO' })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="PAI">Pai</option>
@@ -337,7 +337,7 @@ export default function EditarCriancaCadastrada() {
                     type="tel"
                     required
                     value={formData.telefone}
-                    onChange={(e) => updateResponsavelData('telefone', e.target.value)}
+                    onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -349,7 +349,7 @@ export default function EditarCriancaCadastrada() {
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) => updateResponsavelData('email', e.target.value)}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -361,7 +361,7 @@ export default function EditarCriancaCadastrada() {
               <h3 className="text-lg font-semibold text-gray-900 mb-6">Observações</h3>
               <textarea
                 value={formData.observacoes}
-                onChange={(e) => updateFormData('observacoes', e.target.value)}
+                onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 rows={4}
                 placeholder="Informações adicionais sobre a criança..."

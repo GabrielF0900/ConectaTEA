@@ -26,7 +26,7 @@ enum Parentesco {
 model User {
   id        Int      @id @default(autoincrement())
   name      String
-  email     String? // Removendo @unique para permitir múltiplos nulls
+  email     String?  // Removendo @unique para permitir múltiplos nulls
   password  String
   telefone  String?
   endereco  String?
@@ -42,17 +42,17 @@ model User {
 }
 
 model Crianca {
-  id                  Int        @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   nome                String
   data_nascimento     DateTime
   genero              String
   diagnostico         String
-  diagnosticoDetalhes String? // Detalhes extras do diagnóstico
+  diagnosticoDetalhes String?   // Detalhes extras do diagnóstico
   observacoes         String?
   parentesco          Parentesco // Relação do responsável com a criança
 
   responsavel_id Int
-  responsavel    User @relation("ResponsavelCrianças", fields: [responsavel_id], references: [id])
+  responsavel   User @relation("ResponsavelCrianças", fields: [responsavel_id], references: [id])
 
   // Relacionamentos
   sessoes      Sessoes[]
@@ -61,11 +61,11 @@ model Crianca {
 }
 
 model Profissional {
-  id                    Int    @id @default(autoincrement())
-  usuario_id            Int    @unique
-  especialidade         String
+  id                   Int    @id @default(autoincrement())
+  usuario_id           Int    @unique
+  especialidade        String
   registro_profissional String // CRM, CRP, CREFONO, etc.
-
+  
   usuario User @relation(fields: [usuario_id], references: [id])
 
   // Relacionamentos
