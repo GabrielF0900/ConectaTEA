@@ -76,7 +76,7 @@ export default function Profissionais() {
       <div className="p-6">
         {/* Filtros */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+          <button className="flex items-center gap-2 border px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100">
             <span className="w-4 h-4">⚙️</span>
             Filtros
           </button>
