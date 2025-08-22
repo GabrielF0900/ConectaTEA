@@ -15,6 +15,7 @@ import Profissionais from '../pages/Profissional/Profissionais/Profissionais';
 
 
 
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -65,8 +66,6 @@ export default function AppRoutes() {
           </ProtectedRoute>
         } 
       />
-
-     
 
       {/* Rotas do Responsável */}
       <Route 

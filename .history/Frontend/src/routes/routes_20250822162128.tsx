@@ -12,6 +12,7 @@ import CadastrarCriancas from '../pages/Profissional/CadastrarCriancas/Cadastrar
 import VerDetalhesCriancaCadastrada from '../pages/Profissional/CadastrarCriancas/VerDetalhesCriancaCadastrada';
 import EditarCriancaCadastrada from '../pages/Profissional/CadastrarCriancas/EditarCriancaCadastrada';
 import Profissionais from '../pages/Profissional/Profissionais/Profissionais';
+import ModalPerfilProfissional from '../pages/Profissional/Profissionais/ModalPerfilProfissional';
 
 
 
@@ -66,7 +67,7 @@ export default function AppRoutes() {
         } 
       />
 
-     
+      
 
       {/* Rotas do Responsável */}
       <Route 

@@ -1,7 +1,7 @@
 // src/pages/Profissionais.tsx
 
 import { useState } from "react";
-import { MapPin, Eye, MessageSquare, Linkedin, Instagram, Facebook, Filter } from "lucide-react";
+import { Search, MapPin, Plus, Eye, MessageSquare, Linkedin, Instagram, Facebook, Filter } from "lucide-react";
 
 interface Profissional {
   id: number;

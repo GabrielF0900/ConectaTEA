@@ -12,6 +12,7 @@ import CadastrarCriancas from '../pages/Profissional/CadastrarCriancas/Cadastrar
 import VerDetalhesCriancaCadastrada from '../pages/Profissional/CadastrarCriancas/VerDetalhesCriancaCadastrada';
 import EditarCriancaCadastrada from '../pages/Profissional/CadastrarCriancas/EditarCriancaCadastrada';
 import Profissionais from '../pages/Profissional/Profissionais/Profissionais';
+import ModalPerfilProfissional from '../pages/Profissional/Profissionais/ModalPerfilProfissional';
 
 
 
@@ -66,7 +67,13 @@ export default function AppRoutes() {
         } 
       />
 
-     
+      <Route 
+        path="/profissional/profissionais/perfil/:id" 
+        element={
+          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
+            <ModalPerfilProfissional open={true} onClose={() => {}} profissional={{ profissionaal}} />
+          </ProtectedRoute>
+        }
 
       {/* Rotas do Responsável */}
       <Route 

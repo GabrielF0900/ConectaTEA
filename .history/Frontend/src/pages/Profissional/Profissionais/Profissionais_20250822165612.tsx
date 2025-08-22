@@ -1,7 +1,7 @@
 // src/pages/Profissionais.tsx
 
 import { useState } from "react";
-import { MapPin, Eye, MessageSquare, Linkedin, Instagram, Facebook, Filter } from "lucide-react";
+import { Search, MapPin, Plus, Eye, MessageSquare, Linkedin, Instagram, Facebook, Filter } from "lucide-react";
 
 interface Profissional {
   id: number;
@@ -57,35 +57,22 @@ export default function Profissionais() {
   const [abaAtiva, setAbaAtiva] = useState<'todos' | 'conexoes'>('todos');
 
   return (
-    <div className="h-full bg-[#f8f9fb]">
-      <div className="bg-white border-b px-6 py-4">
-        <div className="flex justify-between items-center">
+  <div className="min-h-screen bg-[#f8f9fb]">
+      <div className="bg-white border-b px-6 py-4 mb-6">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold">Profissionais</h1>
             <p className="text-gray-500">Conecte-se com outros profissionais de saúde</p>
           </div>
+
           <div className="flex items-center gap-4">
-            {/* Barra de pesquisa */}
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Buscar..."
-                className="block w-80 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-green-500 focus:border-green-500"
-              />
+              <Search className="absolute left-4 top-3 w-5 h-5 text-gray-400" />
+              <input type="text" placeholder="Buscar..." className="w-80 pl-12 pr-4 py-2 border border-gray-300 rounded-lg bg-white text-sm" />
             </div>
 
-            {/* Botão adicionar */}
-            <button className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
-              <span className="text-lg">+</span>
-              Adicionar
-            </button>
+            <button className="flex items-center gap-2 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"><Plus className="w-4 h-4" /> Adicionar</button>
 
-            {/* Notificações */}
             <button className="p-2 text-gray-400 hover:text-gray-600">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5z" />
@@ -93,7 +80,6 @@ export default function Profissionais() {
               </svg>
             </button>
 
-            {/* Usuário */}
             <div className="flex items-center gap-2">
               <span className="font-semibold">Gabriel Falcão da Cruz</span>
               <span className="text-xs bg-green-100 text-green-600 rounded px-2 py-1">PROFISSIONAL</span>
@@ -102,7 +88,7 @@ export default function Profissionais() {
         </div>
       </div>
 
-  <div className="p-6">
+      <div className="max-w-7xl mx-auto px-4 p-6">
         {/* Tabs and actions */}
         <div className="flex items-center mb-4">
           <div className="flex gap-2">
