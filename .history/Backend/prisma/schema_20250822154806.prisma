@@ -12,6 +12,9 @@ enum UserType {
   RESPONSAVEL
 }
 
+
+
+
 enum Parentesco {
   PAI
   MAE
@@ -21,12 +24,6 @@ enum Parentesco {
   TIA
   TUTOR
   OUTRO
-}
-
-enum StatusConexao {
-  PENDENTE
-  ACEITO
-  RECUSADO
 }
 
 model User {
@@ -77,9 +74,6 @@ model Profissional {
   // Relacionamentos
   sessoes      Sessoes[]
   prof_crianca ProfissionalCriança[]
-
-  conexoesEnviadas ConexaoProfissional[] @relation("ConexoesEnviadas")
-  conexoesRecebidas ConexaoProfissional[] @relation("ConexoesRecebidas")
 }
 
 model ProfissionalCriança {
@@ -90,19 +84,6 @@ model ProfissionalCriança {
   crianca      Crianca      @relation(fields: [crianca_id], references: [id])
 
   @@id([profissional_id, crianca_id])
-}
-
-model ConexaoProfissional {
-  id             Int           @id @default(autoincrement())
-  solicitante_id Int
-  solicitado_id  Int
-  status         StatusConexao @default(PENDENTE)
-  criado_em      DateTime      @default(now())
-
-  solicitante Profissional @relation("ConexoesEnviadas", fields: [solicitante_id], references: [id])
-  solicitado  Profissional @relation("ConexoesRecebidas", fields: [solicitado_id], references: [id])
-
-  @@unique([solicitante_id, solicitado_id]) // evita duplicidade de conexões
 }
 
 model Sessoes {
@@ -136,3 +117,5 @@ model Progresso {
 
   meta Meta @relation(fields: [meta_id], references: [id])
 }
+
+
