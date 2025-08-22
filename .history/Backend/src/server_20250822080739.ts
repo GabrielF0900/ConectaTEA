@@ -54,5 +54,5 @@ io.on('connection', (socket) => {
 
 // 🔥 Sobe o servidor HTTP + WebSocket
 server.listen(PORT, () => {
-  console.log(`Servidor HTTP e WebSocket rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
