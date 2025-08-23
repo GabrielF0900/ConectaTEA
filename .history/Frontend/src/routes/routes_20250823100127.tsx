@@ -12,7 +12,7 @@ import CadastrarCriancas from '../pages/Profissional/CadastrarCriancas/Cadastrar
 import VerDetalhesCriancaCadastrada from '../pages/Profissional/CadastrarCriancas/VerDetalhesCriancaCadastrada';
 import EditarCriancaCadastrada from '../pages/Profissional/CadastrarCriancas/EditarCriancaCadastrada';
 import Profissionais from '../pages/Profissional/Profissionais/Profissionais';
-import PerfilProfissional from '../pages/Profissional/Perfil/VerPerfil';
+import Perfil
 
 
 
@@ -69,14 +69,7 @@ export default function AppRoutes() {
         } 
       />
 
-      <Route 
-        path="/profissional/perfil" 
-        element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
-            <PerfilProfissional />
-          </ProtectedRoute>
-        } 
-      />
+     
 
       {/* Rotas do Responsável */}
       <Route 

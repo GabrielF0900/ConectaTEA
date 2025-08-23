@@ -69,14 +69,9 @@ export default function AppRoutes() {
         } 
       />
 
-      <Route 
-        path="/profissional/perfil" 
-        element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
-            <PerfilProfissional />
-          </ProtectedRoute>
-        } 
-      />
+      
+
+     
 
       {/* Rotas do Responsável */}
       <Route 
