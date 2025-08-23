@@ -7,7 +7,6 @@ type Usuario = { nome: string } |  null; //Tipando o usuario e colocando como St
 export default function Dashboard() {
   const [usuario, setUsuario] = useState<Usuario>(null);
   const [role, setRole] = useState<Role>(null);
-  const [openMenu, setOpenMenu] = useState(false);
 
   console.log("Dashboard renderizando...", usuario);
 
@@ -87,37 +86,9 @@ export default function Dashboard() {
               </svg>
             </button>
             {/* Usuário */}
-            <div className="relative">
-              <button
-                onClick={() => setOpenMenu(!openMenu)}
-                className="flex items-center gap-3 focus:outline-none"
-                aria-haspopup="true"
-                aria-expanded={openMenu}
-              >
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="avatar" className="w-9 h-9 rounded-full border" />
-                <div className="text-left">
-                  <div className="font-semibold">{usuario?.nome ?? "Usuário"}</div>
-                  <div className="px-2 py-1 text-sm bg-green-100 text-green-600 rounded">{role?.UserType ?? "Usuário"}</div>
-                </div>
-                <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.12 1l-4.25 4.65a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                </svg>
-              </button>
-
-              {openMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
-                  <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>
-                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 100 12A6 6 0 0010 2z"/></svg>
-                    Ver Perfil
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>
-                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path d="M6 2a1 1 0 000 2h8a1 1 0 100-2H6z"/></svg>
-                    Configurações
-                  </button>
-                  <div className="border-t" />
-                  <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50" onClick={() => setOpenMenu(false)}>Sair</button>
-                </div>
-              )}
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">{usuario?.nome ?? "Usuário"}</span>
+              <span className="px-2 py-1 text-sm bg-green-100 text-green-600 rounded">{role?.UserType ?? "Usuário"}</span>
             </div>
           </div>
         </div>

@@ -90,7 +90,7 @@ export default function Profissionais() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v18H3V3h6z" />
               </svg>
             </button>
-            <div className="relative">
+            <div className="relative ml-3">
               <button
                 onClick={() => setOpenMenu(!openMenu)}
                 className="flex items-center gap-3 focus:outline-none"
