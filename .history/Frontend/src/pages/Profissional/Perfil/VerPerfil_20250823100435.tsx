@@ -1,51 +1,20 @@
-import { useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaLinkedin, FaUniversity, FaMapMarkerAlt } from "react-icons/fa";
+import Sidebar from "../Dashboard/Sidebar";
 
 export default function PerfilProfissional() {
-  const [openMenu, setOpenMenu] = useState(false);
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header alinhado com outros layouts */}
-      <div className="bg-white border-b px-6 py-4">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <div>
+    <div className="min-h-screen bg-gray-50 flex">
+      <Sidebar />
+
+      <div className="flex-1">
+        {/* Header com título */}
+        <div className="bg-white border-b px-6 py-4">
+          <div className="max-w-7xl mx-auto px-4">
             <h1 className="text-2xl font-bold">Ver Perfil</h1>
-            <p className="text-sm text-gray-500 mt-1">Visualize os dados do profissional</p>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <button
-                onClick={() => setOpenMenu(!openMenu)}
-                className="flex items-center gap-3 focus:outline-none"
-                aria-haspopup="true"
-                aria-expanded={openMenu}
-              >
-                <img src="https://via.placeholder.com/40" alt="avatar" className="w-9 h-9 rounded-full border" />
-                <div className="text-left">
-                  <div className="font-semibold">Gabriel Falcão da Cruz</div>
-                  <div className="text-xs bg-green-100 text-green-600 rounded px-2 py-1">PROFISSIONAL</div>
-                </div>
-                <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.12 1l-4.25 4.65a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                </svg>
-              </button>
-
-              {openMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
-                  <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Ver Perfil</button>
-                  <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Configurações</button>
-                  <div className="border-t" />
-                  <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50" onClick={() => setOpenMenu(false)}>Sair</button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
-      </div>
 
-      <div className="p-6 flex justify-center">
+        <div className="p-6 flex justify-center">
           {/* Card */}
           <div className="bg-white shadow-md rounded-2xl max-w-3xl w-full p-6 sm:p-10">
             {/* Foto + Nome */}
@@ -116,6 +85,7 @@ export default function PerfilProfissional() {
             </div>
           </div>
         </div>
+      </div>
     </div>
   );
 }

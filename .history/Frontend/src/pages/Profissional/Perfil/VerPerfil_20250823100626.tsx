@@ -116,6 +116,7 @@ export default function PerfilProfissional() {
             </div>
           </div>
         </div>
+      </div>
     </div>
   );
 }
