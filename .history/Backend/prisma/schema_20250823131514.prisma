@@ -29,24 +29,6 @@ enum StatusConexao {
   RECUSADO
 }
 
-enum AuditAction {
-  CONEXAO_ENVIADA
-  CONEXAO_ACEITA
-  CONEXAO_RECUSADA
-  CONEXAO_REMOVIDA
-  PERFIL_ATUALIZADO
-  LOGIN
-  LOGOUT
-}
-
-enum RedeSocialTipo {
-  LINKEDIN
-  INSTAGRAM
-  FACEBOOK
-  SITE
-  OUTRO
-}
-
 model User {
   id        Int      @id @default(autoincrement())
   name      String
@@ -60,7 +42,6 @@ model User {
   // Relacionamentos
   criancas     Crianca[]     @relation("ResponsavelCrianças")
   profissional Profissional?
-  auditLogs    AuditLog[]
 }
 
 model Crianca {
@@ -94,16 +75,16 @@ model Profissional {
   sessoes      Sessoes[]
   prof_crianca ProfissionalCriança[]
 
-  conexoesEnviadas  ConexaoProfissional[] @relation("ConexoesEnviadas")
-  conexoesRecebidas ConexaoProfissional[] @relation("ConexoesRecebidas")
+  conexoesEnviadas   ConexaoProfissional[] @relation("ConexoesEnviadas")
+  conexoesRecebidas  ConexaoProfissional[] @relation("ConexoesRecebidas")
 
-  locaisAtendimento LocalAtendimento[]
-  redesSociais      RedeSocial[]
-  areasAtuacao      AreaAtuacaoProfissional[]
+  locaisAtendimento  LocalAtendimento[]
+  redesSociais       RedeSocial[]
+  areasAtuacao       AreaAtuacaoProfissional[]
 }
 
 model LocalAtendimento {
-  id              Int          @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   nome            String
   cidade          String
   profissional_id Int
@@ -111,16 +92,16 @@ model LocalAtendimento {
 }
 
 model RedeSocial {
-  id              Int          @id @default(autoincrement())
-  tipo            String // "LinkedIn", "Instagram", "Facebook"
+  id              Int           @id @default(autoincrement())
+  tipo            String        // "LinkedIn", "Instagram", "Facebook"
   url             String?
   profissional_id Int
   profissional    Profissional @relation(fields: [profissional_id], references: [id])
 }
 
 model AreaAtuacao {
-  id   Int    @id @default(autoincrement())
-  nome String @unique
+  id    Int    @id @default(autoincrement())
+  nome  String @unique
 
   profissionais AreaAtuacaoProfissional[]
 }
@@ -190,15 +171,17 @@ model Progresso {
   meta Meta @relation(fields: [meta_id], references: [id])
 }
 
-model AuditLog {
-  id        Int         @id @default(autoincrement())
-  userId    Int?
-  action    AuditAction
-  details   String?
-  createdAt DateTime    @default(now())
 
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+model AuditLog {
+  id         Int         @id @default(autoincrement())
+  userId     Int?
+  action     AuditAction
+  details    String?
+  createdAt  DateTime    @default(now())
+
+  user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([action])
   @@index([createdAt])
 }
+
