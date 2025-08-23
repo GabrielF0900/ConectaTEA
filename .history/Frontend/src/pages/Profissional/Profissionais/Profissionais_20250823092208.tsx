@@ -103,21 +103,13 @@ export default function Profissionais() {
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setTab("todos")}
-            className={`px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-green-200 ${
-              tab === "todos"
-                ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-green-600 border border-green-200 hover:bg-green-50"
-            }`}
+            className={`px-4 py-2 rounded-lg border ${tab === "todos" ? "bg-gray-900 text-white" : "bg-white"}`}
           >
             Todos os Profissionais
           </button>
           <button
             onClick={() => setTab("conexoes")}
-            className={`px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-green-200 ${
-              tab === "conexoes"
-                ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-green-600 border border-green-200 hover:bg-green-50"
-            }`}
+            className={`px-4 py-2 rounded-lg border ${tab === "conexoes" ? "bg-gray-900 text-white" : "bg-white"}`}
           >
             Minhas Conexões (2)
           </button>

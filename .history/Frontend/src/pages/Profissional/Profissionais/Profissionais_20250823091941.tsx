@@ -1,6 +1,6 @@
 // src/pages/Profissionais.tsx
 import { useState } from "react";
-import { Search, MapPin, Linkedin, Facebook, Instagram, Filter, Eye, MessageSquare, Check, Clock, UserPlus } from "lucide-react";
+import { Search, MapPin, Linkedin, Facebook, Instagram, Filter } from "lucide-react";
 
 interface Profissional {
   id: number;
@@ -103,21 +103,13 @@ export default function Profissionais() {
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setTab("todos")}
-            className={`px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-green-200 ${
-              tab === "todos"
-                ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-green-600 border border-green-200 hover:bg-green-50"
-            }`}
+            className={`px-4 py-2 rounded-lg border ${tab === "todos" ? "bg-gray-900 text-white" : "bg-white"}`}
           >
             Todos os Profissionais
           </button>
           <button
             onClick={() => setTab("conexoes")}
-            className={`px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-green-200 ${
-              tab === "conexoes"
-                ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-green-600 border border-green-200 hover:bg-green-50"
-            }`}
+            className={`px-4 py-2 rounded-lg border ${tab === "conexoes" ? "bg-gray-900 text-white" : "bg-white"}`}
           >
             Minhas Conexões (2)
           </button>
@@ -193,36 +185,15 @@ export default function Profissionais() {
                 ))}
               </div>
 
-              <div className="flex items-center justify-between mt-auto pt-3 border-t">
-                <div className="flex items-center gap-3">
-                  <button className="flex items-center gap-2 text-sm border rounded-lg px-3 py-2 bg-white hover:bg-gray-50">
-                    <Eye className="w-4 h-4 text-gray-600" />
-                    Ver Perfil
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  {prof.conectado ? (
-                    <div className="flex items-center gap-2 bg-green-500 text-white rounded-lg px-4 py-2">
-                      <Check className="w-4 h-4" />
-                      <span className="text-sm">Conectado</span>
-                    </div>
-                  ) : prof.pendente ? (
-                    <div className="flex items-center gap-2 border border-orange-200 text-orange-600 rounded-lg px-4 py-2 bg-orange-50">
-                      <Clock className="w-4 h-4" />
-                      <span className="text-sm">Pendente</span>
-                    </div>
-                  ) : (
-                    <button className="flex items-center gap-2 border border-green-200 text-green-600 rounded-lg px-4 py-2 hover:bg-green-50">
-                      <UserPlus className="w-4 h-4" />
-                      <span className="text-sm">Conectar</span>
-                    </button>
-                  )}
-
-                  <button className="w-9 h-9 rounded-full border border-green-200 flex items-center justify-center text-green-600 hover:bg-green-50">
-                    <MessageSquare className="w-4 h-4" />
-                  </button>
-                </div>
+              <div className="flex justify-between items-center mt-auto pt-3 border-t">
+                <button className="text-sm border rounded-lg px-3 py-1">Ver Perfil</button>
+                {prof.conectado ? (
+                  <button className="text-sm bg-green-500 text-white rounded-lg px-3 py-1">Conectado</button>
+                ) : prof.pendente ? (
+                  <button className="text-sm bg-yellow-400 text-white rounded-lg px-3 py-1">Pendente</button>
+                ) : (
+                  <button className="text-sm bg-gray-900 text-white rounded-lg px-3 py-1">Conectar</button>
+                )}
               </div>
             </article>
           ))}

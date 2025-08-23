@@ -1,6 +1,6 @@
 // src/pages/Profissionais.tsx
 import { useState } from "react";
-import { Search, MapPin, Linkedin, Facebook, Instagram, Filter, Eye, MessageSquare, Check, Clock, UserPlus } from "lucide-react";
+import { Search, MapPin, Linkedin, Facebook, Instagram, Filter } from "lucide-react";
 
 interface Profissional {
   id: number;
@@ -68,21 +68,23 @@ export default function Profissionais() {
 
   return (
     <div className="h-full bg-[#f8f9fb]">
-      {/* Top header bar (title + actions) */}
+      {/* Top header bar (aligned with other pages) */}
       <div className="bg-white border-b px-6 py-4">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          {/* Title + subtitle in header */}
-          <div>
-            <h1 className="text-2xl font-bold">Rede de Profissionais</h1>
-            <p className="text-sm text-gray-500 mt-1">Conecte-se e colabore com outros profissionais de saúde</p>
+          <div className="relative w-80">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Buscar..."
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-green-500 focus:border-green-500"
+            />
           </div>
 
-          {/* Actions on the right */}
           <div className="flex items-center gap-4">
-            <button className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
-              <span className="text-lg">+</span>
-              Adicionar
-            </button>
             <button className="p-2 text-gray-400 hover:text-gray-600">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5z" />
@@ -99,25 +101,22 @@ export default function Profissionais() {
 
       {/* Main content */}
       <main className="max-w-7xl mx-auto px-4 p-6">
+        <header className="mb-6">
+          <h1 className="text-2xl font-bold">Rede de Profissionais</h1>
+          <p className="text-sm text-gray-500 mt-1">Conecte-se e colabore com outros profissionais de saúde</p>
+        </header>
+
         {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setTab("todos")}
-            className={`px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-green-200 ${
-              tab === "todos"
-                ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-green-600 border border-green-200 hover:bg-green-50"
-            }`}
+            className={`px-4 py-2 rounded-lg border ${tab === "todos" ? "bg-gray-900 text-white" : "bg-white"}`}
           >
             Todos os Profissionais
           </button>
           <button
             onClick={() => setTab("conexoes")}
-            className={`px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-green-200 ${
-              tab === "conexoes"
-                ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-green-600 border border-green-200 hover:bg-green-50"
-            }`}
+            className={`px-4 py-2 rounded-lg border ${tab === "conexoes" ? "bg-gray-900 text-white" : "bg-white"}`}
           >
             Minhas Conexões (2)
           </button>
@@ -193,36 +192,15 @@ export default function Profissionais() {
                 ))}
               </div>
 
-              <div className="flex items-center justify-between mt-auto pt-3 border-t">
-                <div className="flex items-center gap-3">
-                  <button className="flex items-center gap-2 text-sm border rounded-lg px-3 py-2 bg-white hover:bg-gray-50">
-                    <Eye className="w-4 h-4 text-gray-600" />
-                    Ver Perfil
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  {prof.conectado ? (
-                    <div className="flex items-center gap-2 bg-green-500 text-white rounded-lg px-4 py-2">
-                      <Check className="w-4 h-4" />
-                      <span className="text-sm">Conectado</span>
-                    </div>
-                  ) : prof.pendente ? (
-                    <div className="flex items-center gap-2 border border-orange-200 text-orange-600 rounded-lg px-4 py-2 bg-orange-50">
-                      <Clock className="w-4 h-4" />
-                      <span className="text-sm">Pendente</span>
-                    </div>
-                  ) : (
-                    <button className="flex items-center gap-2 border border-green-200 text-green-600 rounded-lg px-4 py-2 hover:bg-green-50">
-                      <UserPlus className="w-4 h-4" />
-                      <span className="text-sm">Conectar</span>
-                    </button>
-                  )}
-
-                  <button className="w-9 h-9 rounded-full border border-green-200 flex items-center justify-center text-green-600 hover:bg-green-50">
-                    <MessageSquare className="w-4 h-4" />
-                  </button>
-                </div>
+              <div className="flex justify-between items-center mt-auto pt-3 border-t">
+                <button className="text-sm border rounded-lg px-3 py-1">Ver Perfil</button>
+                {prof.conectado ? (
+                  <button className="text-sm bg-green-500 text-white rounded-lg px-3 py-1">Conectado</button>
+                ) : prof.pendente ? (
+                  <button className="text-sm bg-yellow-400 text-white rounded-lg px-3 py-1">Pendente</button>
+                ) : (
+                  <button className="text-sm bg-gray-900 text-white rounded-lg px-3 py-1">Conectar</button>
+                )}
               </div>
             </article>
           ))}
