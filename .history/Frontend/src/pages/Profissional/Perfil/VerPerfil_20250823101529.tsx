@@ -12,8 +12,6 @@ export default function PerfilProfissional() {
     navigate("/profissional/perfil/editar");
   };
 
- 
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header alinhado com outros layouts */}
@@ -122,7 +120,7 @@ export default function PerfilProfissional() {
 
             {/* Botão Editar */}
             <div className="mt-8 flex justify-center">
-              <button onClick={irParaPerfil} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow-md transition">Editar Perfil</button>
+              <button onClick={} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow-md transition">Editar Perfil</button>
             </div>
           </div>
         </div>

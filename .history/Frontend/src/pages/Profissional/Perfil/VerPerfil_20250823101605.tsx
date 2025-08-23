@@ -12,7 +12,9 @@ export default function PerfilProfissional() {
     navigate("/profissional/perfil/editar");
   };
 
- 
+  const voltarParaPerfil = () => {
+    navigate("/profissional/perfil");
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">

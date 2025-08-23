@@ -12,8 +12,6 @@ export default function PerfilProfissional() {
     navigate("/profissional/perfil/editar");
   };
 
- 
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header alinhado com outros layouts */}
