@@ -102,8 +102,7 @@ export default function Profissionais() {
     // precisamos enviar ids de profissional (solicitante_id, solicitado_id)
     if (!loggedProfissionalId) return;
     try {
-  // enviar (solicitanteProfId, solicitadoProfId)
-  await aceitarSolicitacao(prof.id, loggedProfissionalId, { tipo: 'prof' });
+      await aceitarSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
       // atualizar localmente: conectado
       setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, requestStatus: undefined, conectado: true } : p)));
       // opcional: carregar conexoes novamente
@@ -487,8 +486,7 @@ export default function Profissionais() {
                           if (!loggedProfissionalId) return;
                           // chamar removerSolicitacao: (solicitanteId, solicitadoId) — garantir ordem
                           await removerSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
-                          // limpar flags locais: não conectado e sem request pendente
-                          setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, conectado: false, requestStatus: undefined } : p)));
+                          setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, conectado: false } : p)));
                         } catch (e) {
                           console.error('Erro ao desfazer conexão:', e);
                         }

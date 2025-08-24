@@ -102,8 +102,7 @@ export default function Profissionais() {
     // precisamos enviar ids de profissional (solicitante_id, solicitado_id)
     if (!loggedProfissionalId) return;
     try {
-  // enviar (solicitanteProfId, solicitadoProfId)
-  await aceitarSolicitacao(prof.id, loggedProfissionalId, { tipo: 'prof' });
+      await aceitarSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
       // atualizar localmente: conectado
       setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, requestStatus: undefined, conectado: true } : p)));
       // opcional: carregar conexoes novamente
@@ -482,19 +481,6 @@ export default function Profissionais() {
                     <div className="flex items-center gap-2 bg-green-500 text-white rounded-lg px-4 py-2">
                       <Check className="w-4 h-4" />
                       <span className="text-sm">Conectado</span>
-                      <button title="Desfazer conexão" onClick={async () => {
-                        try {
-                          if (!loggedProfissionalId) return;
-                          // chamar removerSolicitacao: (solicitanteId, solicitadoId) — garantir ordem
-                          await removerSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
-                          // limpar flags locais: não conectado e sem request pendente
-                          setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, conectado: false, requestStatus: undefined } : p)));
-                        } catch (e) {
-                          console.error('Erro ao desfazer conexão:', e);
-                        }
-                      }} className="ml-2 text-white hover:text-gray-100">
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
-                      </button>
                     </div>
                   ) : prof.requestStatus === 'received' ? (
                     <div className="flex items-center gap-2">

@@ -86,67 +86,53 @@ export async function EnvioDeSolicitacoes(req: Request, res: Response) {
 
     // Se ainda não resolvemos um lado via profissional.id, mapear via user ids
     if (!solicitanteProf) {
-      if (!Number.isInteger(solicitanteId)) {
-        return res.status(400).json({ error: "ID do usuário solicitante inválido." });
-      }
-
-      const solicitanteUser = await prisma.user.findUnique({ where: { id: solicitanteId } });
-      console.log("[EnvioDeSolicitacoes] solicitanteUser lookup result:", solicitanteUser);
-      if (!solicitanteUser) return res.status(404).json({ error: "Usuário solicitante não encontrado." });
-
-      solicitanteProf = await prisma.profissional.findUnique({ where: { usuario_id: solicitanteId } });
-      console.log("[EnvioDeSolicitacoes] solicitanteProf lookup result:", solicitanteProf);
-
-      // Se o usuário é do tipo PROFISSIONAL e não existe registro em Profissional, criar um mínimo
-      if (!solicitanteProf && solicitanteUser.tipo === 'PROFISSIONAL') {
-        try {
-          console.log('[EnvioDeSolicitacoes] criando registro Profissional mínimo para usuário:', solicitanteId);
-          solicitanteProf = await prisma.profissional.create({
-            data: {
-              usuario_id: solicitanteId,
-              especialidade: 'Não informado',
-              registro_profissional: 'N/A'
-            }
-          });
-          console.log('[EnvioDeSolicitacoes] profissional criado:', solicitanteProf);
-        } catch (e: any) {
-          // Se outro processo criou simultaneamente, tentar buscar novamente
-          console.warn('[EnvioDeSolicitacoes] erro ao criar profissional (talvez já exista), re-consultando:', e?.message ?? e);
-          solicitanteProf = await prisma.profissional.findUnique({ where: { usuario_id: solicitanteId } });
-          console.log('[EnvioDeSolicitacoes] solicitanteProf re-lookup result:', solicitanteProf);
-        }
-      }
+      if (!Number.isInteger(solicitanteId))
+        return res
+          .status(400)
+          .json({ error: "ID do usuário solicitante inválido." });
+      const solicitanteUser = await prisma.user.findUnique({
+        where: { id: solicitanteId },
+      });
+      console.log(
+        "[EnvioDeSolicitacoes] solicitanteUser lookup result:",
+        solicitanteUser
+      );
+      if (!solicitanteUser)
+        return res
+          .status(404)
+          .json({ error: "Usuário solicitante não encontrado." });
+      solicitanteProf = await prisma.profissional.findUnique({
+        where: { usuario_id: solicitanteId },
+      });
+      console.log(
+        "[EnvioDeSolicitacoes] solicitanteProf lookup result:",
+        solicitanteProf
+      );
     }
 
     if (!solicitadoProf) {
-      if (!Number.isInteger(solicitadoId)) {
-        return res.status(400).json({ error: "ID do usuário solicitado inválido." });
-      }
-
-      const solicitadoUser = await prisma.user.findUnique({ where: { id: solicitadoId } });
-      console.log("[EnvioDeSolicitacoes] solicitadoUser lookup result:", solicitadoUser);
-      if (!solicitadoUser) return res.status(404).json({ error: "Usuário solicitado não encontrado." });
-
-      solicitadoProf = await prisma.profissional.findUnique({ where: { usuario_id: solicitadoId } });
-      console.log("[EnvioDeSolicitacoes] solicitadoProf lookup result:", solicitadoProf);
-
-      if (!solicitadoProf && solicitadoUser.tipo === 'PROFISSIONAL') {
-        try {
-          console.log('[EnvioDeSolicitacoes] criando registro Profissional mínimo para usuário:', solicitadoId);
-          solicitadoProf = await prisma.profissional.create({
-            data: {
-              usuario_id: solicitadoId,
-              especialidade: 'Não informado',
-              registro_profissional: 'N/A'
-            }
-          });
-          console.log('[EnvioDeSolicitacoes] profissional criado:', solicitadoProf);
-        } catch (e: any) {
-          console.warn('[EnvioDeSolicitacoes] erro ao criar profissional (talvez já exista), re-consultando:', e?.message ?? e);
-          solicitadoProf = await prisma.profissional.findUnique({ where: { usuario_id: solicitadoId } });
-          console.log('[EnvioDeSolicitacoes] solicitadoProf re-lookup result:', solicitadoProf);
-        }
-      }
+      if (!Number.isInteger(solicitadoId))
+        return res
+          .status(400)
+          .json({ error: "ID do usuário solicitado inválido." });
+      const solicitadoUser = await prisma.user.findUnique({
+        where: { id: solicitadoId },
+      });
+      console.log(
+        "[EnvioDeSolicitacoes] solicitadoUser lookup result:",
+        solicitadoUser
+      );
+      if (!solicitadoUser)
+        return res
+          .status(404)
+          .json({ error: "Usuário solicitado não encontrado." });
+      solicitadoProf = await prisma.profissional.findUnique({
+        where: { usuario_id: solicitadoId },
+      });
+      console.log(
+        "[EnvioDeSolicitacoes] solicitadoProf lookup result:",
+        solicitadoProf
+      );
     }
 
     if (!solicitanteProf || !solicitadoProf) {

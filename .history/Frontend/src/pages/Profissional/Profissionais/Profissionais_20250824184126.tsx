@@ -1,5 +1,5 @@
 // src/pages/Profissionais.tsx
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Search, MapPin, Linkedin, Facebook, Instagram, Filter, Eye, MessageSquare, Check, UserPlus } from "lucide-react";
 import { listarProfissionais, obterProfissionalPorUsuarioId } from "../../../api/protected/axiosProfissionais";
 import type { Profissional as ApiProfissional } from "../../../api/protected/axiosProfissionais";
@@ -34,7 +34,7 @@ export default function Profissionais() {
 
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [loggedProfissionalId, setLoggedProfissionalId] = useState<number | null>(null);
-  // estado local para controlar carregamento de requests não necessário aqui
+  const [requestsLoaded, setRequestsLoaded] = useState(false);
 
   // obter usuário logado (tenta 'user' no localStorage, fallback para token)
   function getLoggedUserId(): number | null {
@@ -102,8 +102,7 @@ export default function Profissionais() {
     // precisamos enviar ids de profissional (solicitante_id, solicitado_id)
     if (!loggedProfissionalId) return;
     try {
-  // enviar (solicitanteProfId, solicitadoProfId)
-  await aceitarSolicitacao(prof.id, loggedProfissionalId, { tipo: 'prof' });
+      await aceitarSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
       // atualizar localmente: conectado
       setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, requestStatus: undefined, conectado: true } : p)));
       // opcional: carregar conexoes novamente
@@ -137,69 +136,6 @@ export default function Profissionais() {
     }
   }
 
-  const fetchProfissionais = useCallback(async (search?: string) => {
-    try {
-      setSearching(!!search);
-      const dados = await listarProfissionais(search ? { search } : undefined);
-      const mapeados: Profissional[] = dados.map((d) => ({
-        ...d,
-        status: (d as unknown as Profissional).status ?? "Offline",
-        codigo: (d as unknown as Profissional).codigo ?? "",
-        locais: (d as unknown as Profissional).locais ?? [],
-        redes: (d as unknown as Profissional).redes ?? {},
-        areas: (d as unknown as Profissional).areas ?? [],
-        conectado: false,
-        requestStatus: undefined,
-      }));
-
-      setProfissionais(mapeados);
-      // se já temos usuário logado, carregar solicitações e conexões para marcar os cards
-      if (loggedUserId) {
-        try {
-          const [recebidas, enviadas] = await Promise.all([
-            listarSolicitacoesRecebidas(loggedUserId),
-            listarSolicitacoesEnviadas(loggedUserId),
-          ]);
-
-          const recebidasFromIds = new Set<number>();
-          recebidas.forEach((r) => recebidasFromIds.add(r.solicitante_id));
-
-          const enviadasToIds = new Set<number>();
-          enviadas.forEach((r) => enviadasToIds.add(r.solicitado_id));
-
-          // marcar
-          setProfissionais((prev) =>
-            prev.map((p) => ({
-              ...p,
-              requestStatus: recebidasFromIds.has(p.id) ? "received" : enviadasToIds.has(p.id) ? "sent" : undefined,
-            }))
-          );
-
-          // carregar conexoes aceitas se temos id de profissional
-          if (loggedProfissionalId) {
-            try {
-              const conex = await listarConexoesPorProfissional(loggedProfissionalId);
-              const connectedIds = new Set<number>();
-              conex.forEach((c) => {
-                connectedIds.add(c.solicitante_id);
-                connectedIds.add(c.solicitado_id);
-              });
-              setProfissionais((prev) => prev.map((p) => ({ ...p, conectado: connectedIds.has(p.id) } as Profissional)));
-            } catch (e) {
-              console.warn("Erro ao carregar conexoes:", e);
-            }
-          }
-        } catch (e) {
-          console.warn("Erro ao carregar solicitações/conexões:", e);
-        }
-      }
-    } catch (err) {
-      console.error("Erro ao buscar profissionais:", err);
-    } finally {
-      setSearching(false);
-    }
-  }, [loggedUserId, loggedProfissionalId]);
-
   useEffect(() => {
     async function carregar() {
   // Busca e popula a lista de profissionais (fetchProfissionais já faz o mapeamento)
@@ -226,7 +162,7 @@ export default function Profissionais() {
         }
       }
 
-    if (userId) {
+      if (userId) {
         try {
           const profLog = await obterProfissionalPorUsuarioId(userId);
           if (profLog && profLog.id) setLoggedProfissionalId(profLog.id);
@@ -237,10 +173,68 @@ export default function Profissionais() {
     }
 
     carregar();
-  }, [fetchProfissionais]);
+  }, []);
 
   // Busca profissionais, opcionalmente usando o parâmetro de search
-  // fetchProfissionais definido acima via arrow function
+  async function fetchProfissionais(search?: string) {
+    try {
+      setSearching(!!search);
+      const dados = await listarProfissionais(search ? { search } : undefined);
+      const mapeados: Profissional[] = dados.map((d) => ({
+        ...d,
+        status: (d as unknown as Profissional).status ?? "Offline",
+        codigo: (d as unknown as Profissional).codigo ?? "",
+        locais: (d as unknown as Profissional).locais ?? [],
+        redes: (d as unknown as Profissional).redes ?? {},
+        areas: (d as unknown as Profissional).areas ?? [],
+        conectado: false,
+        requestStatus: undefined,
+      }));
+
+      setProfissionais(mapeados);
+      // se já temos usuário logado, carregar solicitações e conexões para marcar os cards
+      if (loggedUserId) {
+        try {
+          const [recebidas, enviadas] = await Promise.all([
+            listarSolicitacoesRecebidas(loggedUserId),
+            listarSolicitacoesEnviadas(loggedUserId)
+          ]);
+
+          const recebidasFromIds = new Set<number>();
+          recebidas.forEach(r => recebidasFromIds.add(r.solicitante_id));
+
+          const enviadasToIds = new Set<number>();
+          enviadas.forEach(r => enviadasToIds.add(r.solicitado_id));
+
+          // marcar
+          setProfissionais((prev) => prev.map(p => ({
+            ...p,
+            requestStatus: recebidasFromIds.has(p.id) ? 'received' : (enviadasToIds.has(p.id) ? 'sent' : undefined)
+          })));
+
+          // carregar conexoes aceitas se temos id de profissional
+          if (loggedProfissionalId) {
+            try {
+              const conex = await listarConexoesPorProfissional(loggedProfissionalId);
+              const connectedIds = new Set<number>();
+              conex.forEach(c => { connectedIds.add(c.solicitante_id); connectedIds.add(c.solicitado_id); });
+              setProfissionais((prev) => prev.map(p => ({ ...p, conectado: connectedIds.has(p.id) } as Profissional)));
+            } catch (e) {
+              console.warn('Erro ao carregar conexoes:', e);
+            }
+          }
+        } catch (e) {
+          console.warn('Erro ao carregar solicitações/conexões:', e);
+        } finally {
+          setRequestsLoaded(true);
+        }
+      }
+    } catch (err) {
+      console.error("Erro ao buscar profissionais:", err);
+    } finally {
+      setSearching(false);
+    }
+  }
 
   // debounce do input de busca
   useEffect(() => {
@@ -253,7 +247,7 @@ export default function Profissionais() {
     return () => {
       if (searchDebounceRef.current) window.clearTimeout(searchDebounceRef.current);
     };
-  }, [searchInput, fetchProfissionais]);
+  }, [searchInput]);
 
   const conexoesCount = profissionais.filter((p) => p.conectado).length;
   const displayed = tab === "todos" ? profissionais : profissionais.filter((p) => p.conectado);
@@ -482,32 +476,13 @@ export default function Profissionais() {
                     <div className="flex items-center gap-2 bg-green-500 text-white rounded-lg px-4 py-2">
                       <Check className="w-4 h-4" />
                       <span className="text-sm">Conectado</span>
-                      <button title="Desfazer conexão" onClick={async () => {
-                        try {
-                          if (!loggedProfissionalId) return;
-                          // chamar removerSolicitacao: (solicitanteId, solicitadoId) — garantir ordem
-                          await removerSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
-                          // limpar flags locais: não conectado e sem request pendente
-                          setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, conectado: false, requestStatus: undefined } : p)));
-                        } catch (e) {
-                          console.error('Erro ao desfazer conexão:', e);
-                        }
-                      }} className="ml-2 text-white hover:text-gray-100">
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
-                      </button>
                     </div>
-                  ) : prof.requestStatus === 'received' ? (
+                  ) : prof.pendente ? (
                     <div className="flex items-center gap-2">
                       <button onClick={() => handleAceitar(prof)} className="flex items-center gap-2 border border-green-200 text-green-600 rounded-lg px-4 py-2 hover:bg-green-50">
                         <Check className="w-4 h-4" />
                         <span className="text-sm">Aceitar</span>
                       </button>
-                      <button onClick={() => handleRecusar(prof)} className="flex items-center gap-2 border border-red-200 text-red-600 rounded-lg px-3 py-2 hover:bg-red-50">
-                        <span className="text-sm">Recusar</span>
-                      </button>
-                    </div>
-                  ) : prof.requestStatus === 'sent' ? (
-                    <div className="flex items-center gap-2">
                       <div className="text-xs text-orange-600 px-3">Pendente</div>
                     </div>
                   ) : (

@@ -487,8 +487,7 @@ export default function Profissionais() {
                           if (!loggedProfissionalId) return;
                           // chamar removerSolicitacao: (solicitanteId, solicitadoId) — garantir ordem
                           await removerSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
-                          // limpar flags locais: não conectado e sem request pendente
-                          setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, conectado: false, requestStatus: undefined } : p)));
+                          setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, conectado: false } : p)));
                         } catch (e) {
                           console.error('Erro ao desfazer conexão:', e);
                         }

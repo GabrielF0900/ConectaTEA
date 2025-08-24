@@ -31,8 +31,6 @@ export async function ListarSolicitacoesRecebidas(req: Request, res: Response) {
         }
       }
 
-    if (!prof) return res.status(404).json({ error: 'Profissional não encontrado após tentativa de criação.' });
-
     const solicitacoes = await prisma.conexaoProfissional.findMany({
       where: { solicitado_id: prof.id },
       orderBy: { criado_em: 'desc' },

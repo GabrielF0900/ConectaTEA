@@ -18,10 +18,9 @@ export async function listarProfissionaisHandler(req: Request, res: Response) {
     }
 
     if (search) {
-      // busca por nome do usuário relacionado (usuario.name) ou especialidade
-      // (case-insensitive, contains)
+      // busca por nome ou especialidade (case-insensitive, contains)
       where.OR = [
-        { usuario: { name: { contains: search, mode: 'insensitive' } } },
+        { nome: { contains: search, mode: 'insensitive' } },
         { especialidade: { contains: search, mode: 'insensitive' } }
       ];
     }

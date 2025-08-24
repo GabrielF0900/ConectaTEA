@@ -55,9 +55,9 @@ export async function RecusarSolicitacao(req: Request, res: Response) {
         });
 
         if (conexaoPendente) {
-            // Permitir que tanto o remetente quanto o destinatário cancelem/recusem a solicitação pendente
-            if (currentUserId && currentUserId !== solicitadoProf.usuario_id && currentUserId !== solicitanteProf.usuario_id) {
-                return res.status(403).json({ error: 'Você não tem permissão para cancelar/recusar esta solicitação.' });
+            // Apenas o destinatário pode recusar uma solicitação pendente
+            if (currentUserId && currentUserId !== solicitadoProf.usuario_id) {
+                return res.status(403).json({ error: 'Apenas o destinatário pode recusar a solicitação.' });
             }
 
             const conexaoAtualizada = await prisma.conexaoProfissional.update({
