@@ -61,15 +61,8 @@ export default function Profissionais() {
   async function handleConectar(prof: Profissional) {
     if (!loggedUserId) return;
     try {
-      // Preferir enviar ids de profissional quando já tivermos o id do profissional logado
-      if (loggedProfissionalId) {
-        // enviar solicitanteProfId e solicitadoProfId para o backend
-        // chamar o cliente HTTP passando tipo 'prof'
-        await enviarSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
-      } else {
-        // fallback para enviar user ids (backend fará o mapping)
-        await enviarSolicitacao(loggedUserId, prof.usuario_id ?? prof.id);
-      }
+      // enviarSolicitacao espera ids de usuário conforme implementação do backend
+      await enviarSolicitacao(loggedUserId, prof.usuario_id ?? prof.id);
       setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, pendente: true } : p)));
     } catch (err) {
       console.error("Erro ao enviar solicitação:", err);
@@ -80,7 +73,7 @@ export default function Profissionais() {
     // precisamos enviar ids de profissional (solicitante_id, solicitado_id)
     if (!loggedProfissionalId) return;
     try {
-  await aceitarSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
+      await aceitarSolicitacao(loggedProfissionalId, prof.id);
       setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, pendente: false, conectado: true } : p)));
     } catch (err) {
       console.error("Erro ao aceitar solicitação:", err);
@@ -284,7 +277,7 @@ export default function Profissionais() {
             {/* Sugestões de busca (aparecem apenas quando há texto no input) */}
             {searchInput.trim().length > 0 && (
               <div className="absolute left-0 right-0 mt-1 bg-white border rounded shadow z-40">
-                    {searching ? (
+                {searching ? (
                   <div className="p-3 text-sm text-gray-600">Buscando...</div>
                 ) : profissionais.length === 0 ? (
                   <div className="p-3 text-sm text-gray-600">Nenhum profissional encontrado</div>
@@ -293,14 +286,7 @@ export default function Profissionais() {
                     {profissionais.slice(0, 6).map((p) => (
                       <li key={p.id} className="flex items-center justify-between px-3 py-2 hover:bg-gray-50">
                         <div className="flex items-center gap-3">
-                          <img
-                            src={p.avatar || "/conectatea.svg"}
-                            alt={p.nome}
-                            className="w-8 h-8 rounded-full"
-                            onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = '/conectatea.svg';
-                            }}
-                          />
+                          <img src={p.avatar || "https://via.placeholder.com/36"} alt={p.nome} className="w-8 h-8 rounded-full" />
                           <div className="text-sm">
                             <div className="font-medium">{p.nome}</div>
                             <div className="text-xs text-gray-500">{p.especialidade}</div>
@@ -336,9 +322,6 @@ export default function Profissionais() {
                   src={prof.avatar || "/conectatea.svg"}
                   alt={prof.nome}
                   className="w-14 h-14 rounded-full border"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = '/conectatea.svg';
-                  }}
                 />
                 <div>
                   <h2 className="font-semibold">{prof.nome}</h2>

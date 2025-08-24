@@ -38,9 +38,8 @@ export async function EnvioDeSolicitacoes(req: Request, res: Response) {
             if (!solicitadoProf) return res.status(404).json({ error: 'Profissional solicitado não encontrado.' });
         }
 
-        // Se não forneceu ids de profissional, tenta mapear via user ids
+        // Se não forneceu profissionalId, tenta mapear via user ids
         if (!solicitanteProf) {
-            // solicitanteProfId não fornecido -> precisamos dos user ids
             if (!Number.isInteger(solicitanteId)) return res.status(400).json({ error: 'ID do usuário solicitante inválido.' });
             const solicitanteUser = await prisma.user.findUnique({ where: { id: solicitanteId } });
             if (!solicitanteUser) return res.status(404).json({ error: 'Usuário solicitante não encontrado.' });
@@ -48,7 +47,6 @@ export async function EnvioDeSolicitacoes(req: Request, res: Response) {
         }
 
         if (!solicitadoProf) {
-            // solicitadoProfId não fornecido -> precisamos dos user ids
             if (!Number.isInteger(solicitadoId)) return res.status(400).json({ error: 'ID do usuário solicitado inválido.' });
             const solicitadoUser = await prisma.user.findUnique({ where: { id: solicitadoId } });
             if (!solicitadoUser) return res.status(404).json({ error: 'Usuário solicitado não encontrado.' });

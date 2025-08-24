@@ -34,7 +34,7 @@ export async function listarProfissionais(params?: { usuarioId?: number; search?
 		if (params?.usuarioId !== undefined) query.push(`usuarioId=${encodeURIComponent(params.usuarioId)}`);
 		if (params?.search) query.push(`search=${encodeURIComponent(params.search)}`);
 		const suffix = query.length ? `?${query.join("&")}` : "";
-	const { data } = await api.get<Profissional[]>(`/private/profissionais${suffix}`);
+	const { data } = await api.get<Profissional[]>(`/profissionais${suffix}`);
 		return data;
 	} catch (e) {
 		throw new Error(extractErrorMessage(e));
@@ -43,7 +43,7 @@ export async function listarProfissionais(params?: { usuarioId?: number; search?
 
 export async function obterProfissionalPorId(id: number): Promise<Profissional> {
 	try {
-	const { data } = await api.get<Profissional>(`/private/profissionais/${id}`);
+	const { data } = await api.get<Profissional>(`/profissionais/${id}`);
 		return data;
 	} catch (e) {
 		throw new Error(extractErrorMessage(e));
@@ -52,7 +52,7 @@ export async function obterProfissionalPorId(id: number): Promise<Profissional> 
 
 export async function obterProfissionalPorUsuarioId(usuarioId: number): Promise<Profissional | null> {
 	try {
-	const { data } = await api.get<Profissional[]>(`/private/profissionais?usuarioId=${encodeURIComponent(usuarioId)}`);
+	const { data } = await api.get<Profissional[]>(`/profissionais?usuarioId=${encodeURIComponent(usuarioId)}`);
 		return Array.isArray(data) && data.length > 0 ? data[0] : null;
 	} catch (e) {
 		throw new Error(extractErrorMessage(e));

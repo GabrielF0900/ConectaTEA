@@ -64,8 +64,8 @@ export default function Profissionais() {
       // Preferir enviar ids de profissional quando já tivermos o id do profissional logado
       if (loggedProfissionalId) {
         // enviar solicitanteProfId e solicitadoProfId para o backend
-        // chamar o cliente HTTP passando tipo 'prof'
-        await enviarSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
+        // chamar o cliente HTTP diretamente com os nomes esperados pelo backend
+        await enviarSolicitacao(loggedProfissionalId, prof.id);
       } else {
         // fallback para enviar user ids (backend fará o mapping)
         await enviarSolicitacao(loggedUserId, prof.usuario_id ?? prof.id);
@@ -80,7 +80,7 @@ export default function Profissionais() {
     // precisamos enviar ids de profissional (solicitante_id, solicitado_id)
     if (!loggedProfissionalId) return;
     try {
-  await aceitarSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
+      await aceitarSolicitacao(loggedProfissionalId, prof.id);
       setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, pendente: false, conectado: true } : p)));
     } catch (err) {
       console.error("Erro ao aceitar solicitação:", err);

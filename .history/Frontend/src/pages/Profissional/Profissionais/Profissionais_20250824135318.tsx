@@ -1,5 +1,5 @@
 // src/pages/Profissionais.tsx
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Search, MapPin, Linkedin, Facebook, Instagram, Filter, Eye, MessageSquare, Check, UserPlus } from "lucide-react";
 import { listarProfissionais, obterProfissionalPorUsuarioId } from "../../../api/protected/axiosProfissionais";
 import type { Profissional as ApiProfissional } from "../../../api/protected/axiosProfissionais";
@@ -26,9 +26,6 @@ interface Profissional extends ApiProfissional {
 export default function Profissionais() {
   const [tab, setTab] = useState("todos");
   const [openMenu, setOpenMenu] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
-  const [searching, setSearching] = useState(false);
-  const searchDebounceRef = useRef<number | null>(null);
 
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [loggedProfissionalId, setLoggedProfissionalId] = useState<number | null>(null);
@@ -61,15 +58,8 @@ export default function Profissionais() {
   async function handleConectar(prof: Profissional) {
     if (!loggedUserId) return;
     try {
-      // Preferir enviar ids de profissional quando já tivermos o id do profissional logado
-      if (loggedProfissionalId) {
-        // enviar solicitanteProfId e solicitadoProfId para o backend
-        // chamar o cliente HTTP passando tipo 'prof'
-        await enviarSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
-      } else {
-        // fallback para enviar user ids (backend fará o mapping)
-        await enviarSolicitacao(loggedUserId, prof.usuario_id ?? prof.id);
-      }
+      // enviarSolicitacao espera ids de usuário conforme implementação do backend
+      await enviarSolicitacao(loggedUserId, prof.usuario_id ?? prof.id);
       setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, pendente: true } : p)));
     } catch (err) {
       console.error("Erro ao enviar solicitação:", err);
@@ -80,7 +70,7 @@ export default function Profissionais() {
     // precisamos enviar ids de profissional (solicitante_id, solicitado_id)
     if (!loggedProfissionalId) return;
     try {
-  await aceitarSolicitacao(loggedProfissionalId, prof.id, { tipo: 'prof' });
+      await aceitarSolicitacao(loggedProfissionalId, prof.id);
       setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, pendente: false, conectado: true } : p)));
     } catch (err) {
       console.error("Erro ao aceitar solicitação:", err);
@@ -89,10 +79,22 @@ export default function Profissionais() {
 
   useEffect(() => {
     async function carregar() {
-  // Busca e popula a lista de profissionais (fetchProfissionais já faz o mapeamento)
-  await fetchProfissionais();
+      const dados = await listarProfissionais();
+      // Map backend ApiProfissional -> local Profissional with defaults
+      const mapeados: Profissional[] = dados.map((d) => ({
+        ...d,
+        status: (d as unknown as Profissional).status ?? "Offline",
+        codigo: (d as unknown as Profissional).codigo ?? "",
+        locais: (d as unknown as Profissional).locais ?? [],
+        redes: (d as unknown as Profissional).redes ?? {},
+        areas: (d as unknown as Profissional).areas ?? [],
+        conectado: false,
+        pendente: false,
+      }));
 
-  // Se temos um usuário logado, tenta resolver o profissional associado
+      setProfissionais(mapeados);
+
+      // Se temos um usuário logado, tenta resolver o profissional associado
       const userData = localStorage.getItem("user");
       const token = localStorage.getItem("token");
       let userId: number | null = null;
@@ -125,43 +127,6 @@ export default function Profissionais() {
 
     carregar();
   }, []);
-
-  // Busca profissionais, opcionalmente usando o parâmetro de search
-  async function fetchProfissionais(search?: string) {
-    try {
-      setSearching(!!search);
-      const dados = await listarProfissionais(search ? { search } : undefined);
-      const mapeados: Profissional[] = dados.map((d) => ({
-        ...d,
-        status: (d as unknown as Profissional).status ?? "Offline",
-        codigo: (d as unknown as Profissional).codigo ?? "",
-        locais: (d as unknown as Profissional).locais ?? [],
-        redes: (d as unknown as Profissional).redes ?? {},
-        areas: (d as unknown as Profissional).areas ?? [],
-        conectado: false,
-        pendente: false,
-      }));
-
-      setProfissionais(mapeados);
-    } catch (err) {
-      console.error("Erro ao buscar profissionais:", err);
-    } finally {
-      setSearching(false);
-    }
-  }
-
-  // debounce do input de busca
-  useEffect(() => {
-    if (searchDebounceRef.current) window.clearTimeout(searchDebounceRef.current);
-    // se campo vazio, busca todos
-    searchDebounceRef.current = window.setTimeout(() => {
-      fetchProfissionais(searchInput.trim() || undefined);
-    }, 300) as unknown as number;
-
-    return () => {
-      if (searchDebounceRef.current) window.clearTimeout(searchDebounceRef.current);
-    };
-  }, [searchInput]);
 
   const conexoesCount = profissionais.filter((p) => p.conectado).length;
   const displayed = tab === "todos" ? profissionais : profissionais.filter((p) => p.conectado);
@@ -199,7 +164,7 @@ export default function Profissionais() {
                 aria-expanded={openMenu}
               >
                 <img
-                  src="/conectatea.svg"
+                  src="https://randomuser.me/api/portraits/women/65.jpg"
                   alt="avatar"
                   className="w-9 h-9 rounded-full border"
                 />
@@ -243,7 +208,7 @@ export default function Profissionais() {
       </div>
 
       {/* Main content */}
-  <main className="max-w-7xl mx-auto px-4 p-6">
+      <main className="max-w-7xl mx-auto px-4 p-6">
         {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button
@@ -270,51 +235,15 @@ export default function Profissionais() {
 
         {/* Filtros */}
         <div className="flex flex-wrap gap-3 items-center mb-6 bg-white p-4 rounded-lg shadow">
-      <div className="flex-1 relative">
+          <div className="flex-1 relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="text-gray-400 w-5 h-5" />
             </div>
             <input
-        type="text"
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        placeholder={searching ? "Buscando..." : "Buscar por nome ou especialidade..."}
-        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-green-500 focus:border-green-500 text-sm"
+              type="text"
+              placeholder="Buscar por nome ou especialidade..."
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-green-500 focus:border-green-500 text-sm"
             />
-            {/* Sugestões de busca (aparecem apenas quando há texto no input) */}
-            {searchInput.trim().length > 0 && (
-              <div className="absolute left-0 right-0 mt-1 bg-white border rounded shadow z-40">
-                    {searching ? (
-                  <div className="p-3 text-sm text-gray-600">Buscando...</div>
-                ) : profissionais.length === 0 ? (
-                  <div className="p-3 text-sm text-gray-600">Nenhum profissional encontrado</div>
-                ) : (
-                  <ul className="max-h-56 overflow-auto">
-                    {profissionais.slice(0, 6).map((p) => (
-                      <li key={p.id} className="flex items-center justify-between px-3 py-2 hover:bg-gray-50">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={p.avatar || "/conectatea.svg"}
-                            alt={p.nome}
-                            className="w-8 h-8 rounded-full"
-                            onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = '/conectatea.svg';
-                            }}
-                          />
-                          <div className="text-sm">
-                            <div className="font-medium">{p.nome}</div>
-                            <div className="text-xs text-gray-500">{p.especialidade}</div>
-                          </div>
-                        </div>
-                        <div>
-                          <button onClick={() => handleConectar(p)} className="text-sm bg-green-600 text-white px-3 py-1 rounded-lg">Adicionar</button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
           </div>
           <select className="border rounded-lg px-3 py-2 text-sm">
             <option>Todas especialidades</option>
@@ -333,12 +262,9 @@ export default function Profissionais() {
             <article key={prof.id} className="bg-white rounded-xl shadow p-5 flex flex-col">
               <div className="flex items-center gap-3 mb-4">
                 <img
-                  src={prof.avatar || "/conectatea.svg"}
+                  src={prof.avatar || "https://via.placeholder.com/60"}
                   alt={prof.nome}
                   className="w-14 h-14 rounded-full border"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = '/conectatea.svg';
-                  }}
                 />
                 <div>
                   <h2 className="font-semibold">{prof.nome}</h2>

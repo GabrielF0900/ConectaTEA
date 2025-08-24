@@ -16,12 +16,9 @@ export async function EnvioDeSolicitacoes(req: Request, res: Response) {
     solicitadoProfId = solicitadoProfId !== undefined ? Number(solicitadoProfId) : undefined;
 
     try {
-        // Se não foram fornecidos ids de profissional, então os ids de usuário são obrigatórios
-        // e devem ser inteiros. Caso contrário, aceitaremos apenas os ids de profissional.
-        if (solicitanteProfId === undefined && solicitadoProfId === undefined) {
-            if (!Number.isInteger(solicitanteId) || !Number.isInteger(solicitadoId)) {
-                return res.status(400).json({ error: 'IDs de usuários inválidos. Devem ser inteiros.' });
-            }
+        //Verificando se os usuários existem no banco de dados e se um deles nao existir, retorna erro.
+        if (!Number.isInteger(solicitanteId) || !Number.isInteger(solicitadoId)) {
+            return res.status(400).json({ error: 'IDs de usuários inválidos. Devem ser inteiros.' });
         }
 
         // Se foram passados ids de profissional, usá-los diretamente
@@ -38,9 +35,8 @@ export async function EnvioDeSolicitacoes(req: Request, res: Response) {
             if (!solicitadoProf) return res.status(404).json({ error: 'Profissional solicitado não encontrado.' });
         }
 
-        // Se não forneceu ids de profissional, tenta mapear via user ids
+        // Se não forneceu profissionalId, tenta mapear via user ids
         if (!solicitanteProf) {
-            // solicitanteProfId não fornecido -> precisamos dos user ids
             if (!Number.isInteger(solicitanteId)) return res.status(400).json({ error: 'ID do usuário solicitante inválido.' });
             const solicitanteUser = await prisma.user.findUnique({ where: { id: solicitanteId } });
             if (!solicitanteUser) return res.status(404).json({ error: 'Usuário solicitante não encontrado.' });
@@ -48,7 +44,6 @@ export async function EnvioDeSolicitacoes(req: Request, res: Response) {
         }
 
         if (!solicitadoProf) {
-            // solicitadoProfId não fornecido -> precisamos dos user ids
             if (!Number.isInteger(solicitadoId)) return res.status(400).json({ error: 'ID do usuário solicitado inválido.' });
             const solicitadoUser = await prisma.user.findUnique({ where: { id: solicitadoId } });
             if (!solicitadoUser) return res.status(404).json({ error: 'Usuário solicitado não encontrado.' });
