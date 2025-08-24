@@ -89,23 +89,24 @@ model Profissional {
   registro_profissional String
 
   // 🔹 Novos campos para o perfil
-  titulo              String? // Ex: "Psicólogo Clínico"
-  formacaoAcademica   String? // Ex: "Psicologia - USP"
-  sobre               String? // Biografia
-  fotoPerfilUrl       String? // URL da foto de perfil
-  codigoIdentificacao String? @unique // Ex: "PROF-001"
+  titulo                String?   // Ex: "Psicólogo Clínico"
+  formacaoAcademica     String?   // Ex: "Psicologia - USP"
+  sobre                 String?   // Biografia
+  fotoPerfilUrl         String?   // URL da foto de perfil
+  codigoIdentificacao   String?   @unique // Ex: "PROF-001"
 
   usuario User @relation(fields: [usuario_id], references: [id])
 
   // Relacionamentos
-  sessoes           Sessoes[]
-  prof_crianca      ProfissionalCriança[]
-  conexoesEnviadas  ConexaoProfissional[]     @relation("ConexoesEnviadas")
-  conexoesRecebidas ConexaoProfissional[]     @relation("ConexoesRecebidas")
+  sessoes      Sessoes[]
+  prof_crianca ProfissionalCriança[]
+  conexoesEnviadas  ConexaoProfissional[] @relation("ConexoesEnviadas")
+  conexoesRecebidas ConexaoProfissional[] @relation("ConexoesRecebidas")
   locaisAtendimento LocalAtendimento[]
   redesSociais      RedeSocial[]
   areasAtuacao      AreaAtuacaoProfissional[]
 }
+
 
 model LocalAtendimento {
   id              Int          @id @default(autoincrement())
