@@ -52,7 +52,7 @@ model User {
   name      String
   email     String?
   password  String
-  telefone  String?
+  telefone  String?  @unique
   endereco  String?
   tipo      UserType
   criado_em DateTime @default(now())
