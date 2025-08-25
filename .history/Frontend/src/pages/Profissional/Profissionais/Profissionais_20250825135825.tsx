@@ -138,19 +138,16 @@ export default function Profissionais() {
     try {
       setSearching(!!search);
       const dados = await listarProfissionais(search ? { search } : undefined);
-      const mapeados: Profissional[] = dados.map((d) => {
-        const src = d as ApiProfissional;
-        return {
-          ...d,
-          status: (d as unknown as Profissional).status ?? "Offline",
-          // mapear campos vindos do backend para nomes usados na UI
-          codigo: src.codigoIdentificacao ?? "",
-          avatar: src.fotoPerfilUrl ?? undefined,
-          // locais/areas/redes já vêm no formato enriquecido do backend
-          conectado: false,
-          requestStatus: undefined,
-        } as Profissional;
-      });
+      const mapeados: Profissional[] = dados.map((d) => ({
+        ...d,
+        status: (d as unknown as Profissional).status ?? "Offline",
+        // mapear campos vindos do backend para nomes usados na UI
+        codigo: (d as any)?.codigoIdentificacao ?? "",
+        avatar: (d as any)?.fotoPerfilUrl ?? undefined,
+        // locais/areas/redes já vêm no formato enriquecido do backend
+        conectado: false,
+        requestStatus: undefined,
+      }));
 
       // filtrar o próprio usuário/profissional da listagem
       const filtrados = mapeados.filter((p) => {
@@ -456,7 +453,7 @@ export default function Profissionais() {
                 <h3 className="font-medium">Locais de atendimento</h3>
                 {(prof.locais ?? []).map((local, i) => (
                   <p key={i} className="flex items-center gap-1 text-gray-600">
-                    <MapPin className="w-4 h-4 text-gray-400" /> {typeof local === 'string' ? local : local.nome}
+                    <MapPin className="w-4 h-4 text-gray-400" /> {local}
                   </p>
                 ))}
               </div>
@@ -472,7 +469,7 @@ export default function Profissionais() {
 
               <div className="flex flex-wrap gap-2 mb-4">
                 {(prof.areas ?? []).map((area, i) => (
-                  <span key={i} className="px-2 py-1 bg-gray-100 rounded-lg text-xs">{typeof area === 'string' ? area : area.nome}</span>
+                  <span key={i} className="px-2 py-1 bg-gray-100 rounded-lg text-xs">{area}</span>
                 ))}
               </div>
 

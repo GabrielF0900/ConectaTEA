@@ -78,13 +78,6 @@ export async function listarProfissionaisHandler(req: Request, res: Response) {
           criado_em: p.usuario.criado_em
         } : null,
 
-  // campos de compatibilidade legados (mantém API anterior)
-  nome: p.usuario?.name ?? null,
-  email: p.usuario?.email ?? null,
-  telefone: p.usuario?.telefone ?? null,
-  endereco: p.usuario?.endereco ?? null,
-  criado_em: p.usuario?.criado_em ?? null,
-
         // relações enriquecidas
         locais,              // array de locais com id/nome/cidade
         redes: redesMap,     // mapa por tipo (ex: linkedin, instagram)

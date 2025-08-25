@@ -31,6 +31,7 @@ export interface Profissional {
 	redes?: { [tipo: string]: string | null };
 	redesArray?: { id: number; tipo: string; url?: string | null }[];
 	areas?: { id?: number; nome?: string }[];
+	areas?: { id?: number; nome?: string }[];
 
 	// campos legacy/compatibilidade
 	email?: string;
