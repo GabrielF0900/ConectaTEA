@@ -24,9 +24,6 @@ export default function PerfilProfissional() {
       .then((data) => {
         setPerfil(data);
         setLoading(false);
-        // Log para depuração do conteúdo de locais
-        // eslint-disable-next-line no-console
-        console.log("perfil.locais:", data?.locais);
       })
       .catch((e) => {
         setErro(e.message);

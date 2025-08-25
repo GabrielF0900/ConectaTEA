@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { obterPerfilProfissional, atualizarPerfilProfissional } from "../../../api/protected/axiosPerfil";
 import type { Profissional } from "../../../api/protected/axiosProfissionais";
 
+type LocalEdit = { id?: number; nome: string; cidade?: string };
+
 
 export default function PerfilEdit() {
   const [perfil, setPerfil] = useState<Partial<Profissional>>({});
@@ -50,7 +52,7 @@ export default function PerfilEdit() {
         nome: l.nome ?? "",
         cidade: l.cidade ?? ""
       }));
-      const payload: Record<string, unknown> = {
+      const payload: Partial<Profissional> = {
         nome: perfil.nome,
         especialidade: perfil.especialidade,
         formacaoAcademica: perfil.formacaoAcademica || "",
@@ -59,10 +61,8 @@ export default function PerfilEdit() {
         email: perfil.email,
         codigoIdentificacao: perfil.codigoIdentificacao || "",
         fotoPerfilUrl: perfil.fotoPerfilUrl,
-        redesSociais: perfil.redes?.linkedin
-          ? [{ tipo: "linkedin", url: perfil.redes.linkedin }]
-          : [],
-        locaisAtendimento: locaisPayload.length > 0 ? locaisPayload : undefined,
+        redes: { linkedin: perfil.redes?.linkedin || "" },
+        locais: locaisPayload.length > 0 ? locaisPayload : undefined,
       };
       await atualizarPerfilProfissional(user.id, payload);
       setLoading(false);
@@ -173,16 +173,13 @@ export default function PerfilEdit() {
               name="localTrabalho"
               value={perfil.locais && perfil.locais.length > 0 ? perfil.locais[0].nome : ""}
               onChange={e => {
-                const localAtual = perfil.locais && perfil.locais.length > 0 ? perfil.locais[0] : undefined;
+                const localAtual = perfil.locais?.[0] || {};
+                const novoLocal: any = { nome: e.target.value };
+                if (typeof localAtual.id === 'number') novoLocal.id = localAtual.id;
+                if (typeof localAtual.cidade === 'string') novoLocal.cidade = localAtual.cidade;
                 setPerfil({
                   ...perfil,
-                  locais: [
-                    {
-                      nome: e.target.value,
-                      id: localAtual && typeof localAtual.id === 'number' ? localAtual.id : 0,
-                      cidade: localAtual && typeof localAtual.cidade === 'string' ? localAtual.cidade : ""
-                    }
-                  ]
+                  locais: [novoLocal]
                 });
               }}
               className="border border-gray-300 rounded-lg px-3 py-2 w-full"

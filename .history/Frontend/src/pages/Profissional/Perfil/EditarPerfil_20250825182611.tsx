@@ -50,7 +50,7 @@ export default function PerfilEdit() {
         nome: l.nome ?? "",
         cidade: l.cidade ?? ""
       }));
-      const payload: Record<string, unknown> = {
+      const payload: Partial<Profissional> = {
         nome: perfil.nome,
         especialidade: perfil.especialidade,
         formacaoAcademica: perfil.formacaoAcademica || "",
@@ -59,10 +59,8 @@ export default function PerfilEdit() {
         email: perfil.email,
         codigoIdentificacao: perfil.codigoIdentificacao || "",
         fotoPerfilUrl: perfil.fotoPerfilUrl,
-        redesSociais: perfil.redes?.linkedin
-          ? [{ tipo: "linkedin", url: perfil.redes.linkedin }]
-          : [],
-        locaisAtendimento: locaisPayload.length > 0 ? locaisPayload : undefined,
+        redes: { linkedin: perfil.redes?.linkedin || "" },
+        locais: locaisPayload.length > 0 ? locaisPayload : undefined,
       };
       await atualizarPerfilProfissional(user.id, payload);
       setLoading(false);

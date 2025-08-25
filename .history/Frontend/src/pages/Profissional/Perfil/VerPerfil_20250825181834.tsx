@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { obterPerfilProfissional } from "../../../api/protected/axiosPerfil";
-import type { Profissional } from "../../../api/protected/axiosProfissionais";
 import { FaPhoneAlt, FaEnvelope, FaLinkedin, FaUniversity, FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 
 export default function PerfilProfissional() {
   const [openMenu, setOpenMenu] = useState(false);
-  const [perfil, setPerfil] = useState<Profissional | null>(null);
+  const [perfil, setPerfil] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -24,9 +23,6 @@ export default function PerfilProfissional() {
       .then((data) => {
         setPerfil(data);
         setLoading(false);
-        // Log para depuração do conteúdo de locais
-        // eslint-disable-next-line no-console
-        console.log("perfil.locais:", data?.locais);
       })
       .catch((e) => {
         setErro(e.message);
@@ -95,7 +91,7 @@ export default function PerfilProfissional() {
               />
               <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-gray-900">{perfil.nome || perfil.usuario?.nome || "Sem nome"}</h2>
               <p className="text-green-600 text-lg font-medium">{perfil.especialidade || ""}</p>
-              <span className="mt-1 text-sm bg-gray-100 px-3 py-1 rounded-md text-gray-700"># {perfil.codigoIdentificacao || ""}</span>
+              <span className="mt-1 text-sm bg-gray-100 px-3 py-1 rounded-md text-gray-700"># {perfil.codigoIdentificacao || perfil.codigo || ""}</span>
             </div>
 
             {/* Conteúdo */}
@@ -105,7 +101,7 @@ export default function PerfilProfissional() {
                 <h2 className="text-lg font-semibold text-gray-800">Formação Acadêmica</h2>
                 <div className="flex items-center mt-2 text-gray-700">
                   <FaUniversity className="text-green-600 mr-2" />
-                  <span>{perfil.formacaoAcademica || ""}</span>
+                  <span>{perfil.formacaoAcademica || perfil.formacao || ""}</span>
                 </div>
               </div>
 
@@ -113,7 +109,7 @@ export default function PerfilProfissional() {
               <div>
                 <h2 className="text-lg font-semibold text-gray-800">Sobre</h2>
                 <p className="mt-2 text-gray-600 leading-relaxed">
-                  {perfil.sobre || ""}
+                  {perfil.sobre || perfil.descricao || ""}
                 </p>
               </div>
 
@@ -147,12 +143,7 @@ export default function PerfilProfissional() {
                 <h2 className="text-lg font-semibold text-gray-800">Local de Trabalho</h2>
                 <div className="flex items-center mt-2 text-gray-700">
                   <FaMapMarkerAlt className="text-green-600 mr-2" />
-                  <span>
-                    {perfil.locais && perfil.locais.length > 0
-                      ? perfil.locais[0].nome || "-"
-                        + (perfil.locais[0].cidade ? ` - ${perfil.locais[0].cidade}` : "")
-                      : "-"}
-                  </span>
+                  <span>{perfil.locais && perfil.locais.length > 0 ? perfil.locais[0].nome + (perfil.locais[0].cidade ? ` - ${perfil.locais[0].cidade}` : "") : ""}</span>
                 </div>
               </div>
             </div>
