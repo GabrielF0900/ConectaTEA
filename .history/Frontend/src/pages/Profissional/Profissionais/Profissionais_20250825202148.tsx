@@ -308,9 +308,7 @@ export default function Profissionais() {
                         try {
                           const u = JSON.parse(user);
                           userId = u?.id ?? u?.userId ?? null;
-                        } catch {
-                          // Ignorar erro de parse do usuário no localStorage
-                        }
+                        } catch {}
                       }
                       if (userId) {
                         navigate(`/profissional/perfil/${userId}`);
