@@ -19,6 +19,7 @@ import {
 } from "../../../api/protected/axiosAmizade";
 
 // --- Tipagem estendida do profissional para a UI
+
 interface Profissional extends ApiProfissional {
   status: "Online" | "Offline";
   codigo?: string;
@@ -30,21 +31,11 @@ interface Profissional extends ApiProfissional {
 function getLoggedUserId(): number | null {
   const userData = localStorage.getItem("user");
   if (userData) {
-    try {
-      const u = JSON.parse(userData);
-      return u?.id ?? u?.userId ?? null;
-    } catch {
-      return null;
-    }
+    try { const u = JSON.parse(userData); return u?.id ?? u?.userId ?? null; } catch { return null; }
   }
   const token = localStorage.getItem("token");
   if (token) {
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload?.id ?? payload?.userId ?? null;
-    } catch {
-      return null;
-    }
+    try { const payload = JSON.parse(atob(token.split(".")[1])); return payload?.id ?? payload?.userId ?? null; } catch { return null; }
   }
   return null;
 }
@@ -87,9 +78,7 @@ function SocialIcons({ prof }: { prof: Profissional }) {
 }
 
 // --- Componente principal ---
-export default function Profissionais() {
   const navigate = useNavigate();
-
   // --- States ---
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<'todos' | 'conexoes'>('todos');
@@ -101,7 +90,6 @@ export default function Profissionais() {
 
   const searchDebounceRef = useRef<number | null>(null);
   const loggedUserId = getLoggedUserId();
-
 
   // --- Funções de conexão ---
   const handleConectar = async (prof: Profissional) => {

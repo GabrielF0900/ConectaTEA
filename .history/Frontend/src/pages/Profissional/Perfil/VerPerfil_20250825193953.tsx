@@ -20,9 +20,7 @@ export default function PerfilProfissional() {
       const user = JSON.parse(userStr);
       nomeUsuarioLogado = user.name || user.nome || "Perfil";
     }
-  } catch {
-    // Se der erro, mantém nomeUsuarioLogado como string vazia
-  }
+  } catch {}
 
   useEffect(() => {
     let profId: number | null = null;
@@ -59,13 +57,6 @@ export default function PerfilProfissional() {
   const irParaPerfil = () => {
     navigate("/profissional/perfil/editar");
   };
-
-  // Função de logout
-  function handleLogout() {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  }
 
   if (loading) return <div className="p-8 text-center">Carregando perfil...</div>;
   if (erro) return <div className="p-8 text-center text-red-500">{erro}</div>;
@@ -104,7 +95,7 @@ export default function PerfilProfissional() {
                   <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Ver Perfil</button>
                   <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Configurações</button>
                   <div className="border-t" />
-                  <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50" onClick={handleLogout}>Sair</button>
+                  <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50" onClick={() => setOpenMenu(false)}>Sair</button>
                 </div>
               )}
             </div>
@@ -205,9 +196,7 @@ export default function PerfilProfissional() {
 
             {/* Botão Editar */}
             <div className="mt-8 flex justify-center">
-              {(!id || (perfil && perfil.id && String(perfil.id) === id)) && (
-                <button onClick={irParaPerfil} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow-md transition">Editar Perfil</button>
-              )}
+              <button onClick={irParaPerfil} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow-md transition">Editar Perfil</button>
             </div>
           </div>
         </div>

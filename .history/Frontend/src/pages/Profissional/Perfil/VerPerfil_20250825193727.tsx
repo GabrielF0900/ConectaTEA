@@ -5,6 +5,8 @@ import type { Profissional } from "../../../api/protected/axiosProfissionais";
 import { FaPhoneAlt, FaEnvelope, FaLinkedin, FaUniversity, FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+
+
 export default function PerfilProfissional() {
   const [openMenu, setOpenMenu] = useState(false);
   const [perfil, setPerfil] = useState<Profissional | null>(null);
@@ -12,17 +14,6 @@ export default function PerfilProfissional() {
   const [erro, setErro] = useState<string | null>(null);
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
-  // Novo: pegar nome do usuário logado
-  let nomeUsuarioLogado = "";
-  try {
-    const userStr = localStorage.getItem("user");
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      nomeUsuarioLogado = user.name || user.nome || "Perfil";
-    }
-  } catch {
-    // Se der erro, mantém nomeUsuarioLogado como string vazia
-  }
 
   useEffect(() => {
     let profId: number | null = null;
@@ -60,13 +51,6 @@ export default function PerfilProfissional() {
     navigate("/profissional/perfil/editar");
   };
 
-  // Função de logout
-  function handleLogout() {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  }
-
   if (loading) return <div className="p-8 text-center">Carregando perfil...</div>;
   if (erro) return <div className="p-8 text-center text-red-500">{erro}</div>;
   if (!perfil) return <div className="p-8 text-center text-gray-500">Perfil não encontrado.</div>;
@@ -89,9 +73,9 @@ export default function PerfilProfissional() {
                 aria-haspopup="true"
                 aria-expanded={openMenu}
               >
-                <img src={perfil?.fotoPerfilUrl || "https://via.placeholder.com/40"} alt="avatar" className="w-9 h-9 rounded-full border" />
+                <img src={perfil.fotoPerfilUrl || "https://via.placeholder.com/40"} alt="avatar" className="w-9 h-9 rounded-full border" />
                 <div className="text-left">
-                  <div className="font-semibold">{nomeUsuarioLogado}</div>
+                  <div className="font-semibold">{perfil.nome || perfil.usuario?.nome || "Sem nome"}</div>
                   <div className="text-xs bg-green-100 text-green-600 rounded px-2 py-1">PROFISSIONAL</div>
                 </div>
                 <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -104,7 +88,7 @@ export default function PerfilProfissional() {
                   <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Ver Perfil</button>
                   <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Configurações</button>
                   <div className="border-t" />
-                  <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50" onClick={handleLogout}>Sair</button>
+                  <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50" onClick={() => setOpenMenu(false)}>Sair</button>
                 </div>
               )}
             </div>
@@ -205,9 +189,7 @@ export default function PerfilProfissional() {
 
             {/* Botão Editar */}
             <div className="mt-8 flex justify-center">
-              {(!id || (perfil && perfil.id && String(perfil.id) === id)) && (
-                <button onClick={irParaPerfil} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow-md transition">Editar Perfil</button>
-              )}
+              <button onClick={irParaPerfil} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow-md transition">Editar Perfil</button>
             </div>
           </div>
         </div>

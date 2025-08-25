@@ -19,13 +19,15 @@ import {
 } from "../../../api/protected/axiosAmizade";
 
 // --- Tipagem estendida do profissional para a UI
+
+
 interface Profissional extends ApiProfissional {
   status: "Online" | "Offline";
   codigo?: string;
   conectado?: boolean;
   requestStatus?: 'received' | 'sent';
   avatar?: string;
-}
+
 
 function getLoggedUserId(): number | null {
   const userData = localStorage.getItem("user");
@@ -87,9 +89,7 @@ function SocialIcons({ prof }: { prof: Profissional }) {
 }
 
 // --- Componente principal ---
-export default function Profissionais() {
   const navigate = useNavigate();
-
   // --- States ---
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<'todos' | 'conexoes'>('todos');
@@ -101,7 +101,6 @@ export default function Profissionais() {
 
   const searchDebounceRef = useRef<number | null>(null);
   const loggedUserId = getLoggedUserId();
-
 
   // --- Funções de conexão ---
   const handleConectar = async (prof: Profissional) => {
