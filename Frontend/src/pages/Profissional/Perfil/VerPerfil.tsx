@@ -60,13 +60,6 @@ export default function PerfilProfissional() {
     navigate("/profissional/perfil/editar");
   };
 
-  // Função de logout
-  function handleLogout() {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  }
-
   if (loading) return <div className="p-8 text-center">Carregando perfil...</div>;
   if (erro) return <div className="p-8 text-center text-red-500">{erro}</div>;
   if (!perfil) return <div className="p-8 text-center text-gray-500">Perfil não encontrado.</div>;
@@ -104,7 +97,7 @@ export default function PerfilProfissional() {
                   <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Ver Perfil</button>
                   <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Configurações</button>
                   <div className="border-t" />
-                  <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50" onClick={handleLogout}>Sair</button>
+                  <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50" onClick={() => setOpenMenu(false)}>Sair</button>
                 </div>
               )}
             </div>
