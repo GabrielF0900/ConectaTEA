@@ -217,17 +217,16 @@ export default function CadastrarCriancas() {
     } catch (error: unknown) {
       console.error('Erro ao cadastrar criança:', error);
       let errorMessage = 'Erro ao cadastrar criança.';
-      // Type guard para AxiosError
-      function isAxiosError(err: unknown): err is { response: { data: { message?: string } } } {
-        if (typeof err !== 'object' || err === null) return false;
-        const maybeResponse = (err as Record<string, unknown>).response;
-        if (typeof maybeResponse !== 'object' || maybeResponse === null) return false;
-        const maybeData = (maybeResponse as Record<string, unknown>).data;
-        if (typeof maybeData !== 'object' || maybeData === null) return false;
-        return true;
-      }
-      if (isAxiosError(error) && 'message' in error.response.data && typeof error.response.data.message === 'string') {
-        errorMessage = error.response.data.message;
+      // Tenta extrair mensagem amigável do backend
+      if (
+        typeof error === 'object' && error !== null &&
+        'response' in error &&
+        typeof (error as any).response === 'object' && (error as any).response !== null &&
+        'data' in (error as any).response &&
+        typeof (error as any).response.data === 'object' && (error as any).response.data !== null &&
+        'message' in (error as any).response.data
+      ) {
+        errorMessage = (error as { response: { data: { message: string } } }).response.data.message;
       } else if (error instanceof Error && error.message) {
         errorMessage = error.message;
       }

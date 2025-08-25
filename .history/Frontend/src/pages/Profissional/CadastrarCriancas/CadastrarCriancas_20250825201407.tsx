@@ -219,12 +219,13 @@ export default function CadastrarCriancas() {
       let errorMessage = 'Erro ao cadastrar criança.';
       // Type guard para AxiosError
       function isAxiosError(err: unknown): err is { response: { data: { message?: string } } } {
-        if (typeof err !== 'object' || err === null) return false;
-        const maybeResponse = (err as Record<string, unknown>).response;
-        if (typeof maybeResponse !== 'object' || maybeResponse === null) return false;
-        const maybeData = (maybeResponse as Record<string, unknown>).data;
-        if (typeof maybeData !== 'object' || maybeData === null) return false;
-        return true;
+        return (
+          typeof err === 'object' && err !== null &&
+          'response' in err &&
+          typeof (err as Record<string, unknown>).response === 'object' && (err as Record<string, unknown>).response !== null &&
+          'data' in (err as { response: unknown }).response &&
+          typeof ((err as { response: { data: unknown } }).response.data) === 'object' && ((err as { response: { data: unknown } }).response.data) !== null
+        );
       }
       if (isAxiosError(error) && 'message' in error.response.data && typeof error.response.data.message === 'string') {
         errorMessage = error.response.data.message;

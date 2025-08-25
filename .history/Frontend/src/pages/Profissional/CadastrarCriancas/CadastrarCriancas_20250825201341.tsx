@@ -214,19 +214,11 @@ export default function CadastrarCriancas() {
         `Criança ${formData.nomeCompleto} foi cadastrada com sucesso!`,
         { duration: 5000 }
       );
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Erro ao cadastrar criança:', error);
       let errorMessage = 'Erro ao cadastrar criança.';
-      // Type guard para AxiosError
-      function isAxiosError(err: unknown): err is { response: { data: { message?: string } } } {
-        if (typeof err !== 'object' || err === null) return false;
-        const maybeResponse = (err as Record<string, unknown>).response;
-        if (typeof maybeResponse !== 'object' || maybeResponse === null) return false;
-        const maybeData = (maybeResponse as Record<string, unknown>).data;
-        if (typeof maybeData !== 'object' || maybeData === null) return false;
-        return true;
-      }
-      if (isAxiosError(error) && 'message' in error.response.data && typeof error.response.data.message === 'string') {
+      // Tenta extrair mensagem amigável do backend
+      if (error?.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error instanceof Error && error.message) {
         errorMessage = error.message;
