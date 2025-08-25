@@ -99,7 +99,7 @@ export default function PerfilProfissional() {
                   ? (<>{perfil.especialidade}</>)
                   : (
                     <span title="Informe sua especialidade profissional, ex: Psicólogo Clínico, Terapeuta Ocupacional, Fonoaudiólogo...">
-                      Especialidade <span className="text-gray-400 text-sm">(ex: Psicólogo Clínico)</span>
+                      Não Informado <span className="text-gray-400 text-sm">(ex: Psicólogo Clínico)</span>
                     </span>
                   )}
               </p>
@@ -150,27 +150,18 @@ export default function PerfilProfissional() {
                 </div>
               </div>
 
-              {/* Locais de Atendimento */}
+              {/* Local de Trabalho */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-800">Locais de Atendimento</h2>
-                {perfil.locais && perfil.locais.length > 0 ? (
-                  <ul className="mt-2 space-y-1">
-                    {perfil.locais.map((local, idx) => (
-                      <li key={idx} className="flex items-center text-gray-700">
-                        <FaMapMarkerAlt className="text-green-600 mr-2" />
-                        <span className="font-medium">{local.nome || "-"}</span>
-                        {local.cidade && (
-                          <span className="ml-2 text-gray-400">{local.cidade}</span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="flex items-center mt-2 text-gray-700">
-                    <FaMapMarkerAlt className="text-green-600 mr-2" />
-                    <span>-</span>
-                  </div>
-                )}
+                <h2 className="text-lg font-semibold text-gray-800">Local de Trabalho</h2>
+                <div className="flex items-center mt-2 text-gray-700">
+                  <FaMapMarkerAlt className="text-green-600 mr-2" />
+                  <span>
+                    {perfil.locais && perfil.locais.length > 0
+                      ? perfil.locais[0].nome || "-"
+                        + (perfil.locais[0].cidade ? ` - ${perfil.locais[0].cidade}` : "")
+                      : "-"}
+                  </span>
+                </div>
               </div>
             </div>
 

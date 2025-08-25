@@ -171,6 +171,31 @@ export default function PerfilEdit() {
           </div>
         </div>
 
+        <div className="mb-6">
+          <h2 className="font-bold text-lg mb-2">Local de Trabalho</h2>
+          <div className="flex items-center gap-2">
+            <FaMapMarkerAlt className="text-green-500" />
+            <input
+              type="text"
+              name="localTrabalho"
+              value={perfil.locais && perfil.locais.length > 0 ? perfil.locais[0].nome : ""}
+              onChange={e => {
+                const localAtual = perfil.locais && perfil.locais.length > 0 ? perfil.locais[0] : undefined;
+                setPerfil({
+                  ...perfil,
+                  locais: [
+                    {
+                      nome: e.target.value,
+                      id: localAtual && typeof localAtual.id === 'number' ? localAtual.id : 0,
+                      cidade: localAtual && typeof localAtual.cidade === 'string' ? localAtual.cidade : ""
+                    }
+                  ]
+                });
+              }}
+              className="border border-gray-300 rounded-lg px-3 py-2 w-full"
+            />
+          </div>
+        </div>
           <div className="mb-6">
             <h2 className="font-bold text-lg mb-2">Locais de Atendimento</h2>
             {Array.isArray(perfil.locais) && perfil.locais.length > 0 ? (
@@ -218,7 +243,7 @@ export default function PerfilEdit() {
               className="mt-2 px-4 py-2 bg-green-100 text-green-700 rounded hover:bg-green-200"
               onClick={() => setPerfil({
                 ...perfil,
-                locais: [...(perfil.locais || []), { id: 0, nome: "", cidade: "" }]
+                locais: [...(perfil.locais || []), { nome: "", cidade: "" }]
               })}
             >
               Adicionar local de atendimento

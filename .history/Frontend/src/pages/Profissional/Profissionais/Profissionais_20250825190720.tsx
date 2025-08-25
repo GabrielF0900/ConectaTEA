@@ -79,7 +79,6 @@ function SocialIcons({ prof }: { prof: Profissional }) {
 }
 
 // --- Componente principal ---
-export default function Profissionais() {
   // --- States ---
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<'todos' | 'conexoes'>('todos');

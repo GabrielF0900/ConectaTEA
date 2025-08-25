@@ -171,59 +171,31 @@ export default function PerfilEdit() {
           </div>
         </div>
 
-          <div className="mb-6">
-            <h2 className="font-bold text-lg mb-2">Locais de Atendimento</h2>
-            {Array.isArray(perfil.locais) && perfil.locais.length > 0 ? (
-              perfil.locais.map((local, idx) => (
-                <div key={idx} className="flex items-center gap-2 mb-2">
-                  <FaMapMarkerAlt className="text-green-500" />
-                  <input
-                    type="text"
-                    placeholder="Nome do local"
-                    value={local.nome || ""}
-                    onChange={e => {
-                      const novosLocais = [...(perfil.locais || [])];
-                      novosLocais[idx] = { ...novosLocais[idx], nome: e.target.value };
-                      setPerfil({ ...perfil, locais: novosLocais });
-                    }}
-                    className="border border-gray-300 rounded-lg px-3 py-2 w-full"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Cidade"
-                    value={local.cidade || ""}
-                    onChange={e => {
-                      const novosLocais = [...(perfil.locais || [])];
-                      novosLocais[idx] = { ...novosLocais[idx], cidade: e.target.value };
-                      setPerfil({ ...perfil, locais: novosLocais });
-                    }}
-                    className="border border-gray-300 rounded-lg px-3 py-2 w-40"
-                  />
-                  <button
-                    type="button"
-                    className="text-red-500 font-bold px-2"
-                    title="Remover local"
-                    onClick={() => {
-                      const novosLocais = (perfil.locais || []).filter((_, i) => i !== idx);
-                      setPerfil({ ...perfil, locais: novosLocais });
-                    }}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))
-            ) : null}
-            <button
-              type="button"
-              className="mt-2 px-4 py-2 bg-green-100 text-green-700 rounded hover:bg-green-200"
-              onClick={() => setPerfil({
-                ...perfil,
-                locais: [...(perfil.locais || []), { id: 0, nome: "", cidade: "" }]
-              })}
-            >
-              Adicionar local de atendimento
-            </button>
+        <div className="mb-6">
+          <h2 className="font-bold text-lg mb-2">Local de Trabalho</h2>
+          <div className="flex items-center gap-2">
+            <FaMapMarkerAlt className="text-green-500" />
+            <input
+              type="text"
+              name="localTrabalho"
+              value={perfil.locais && perfil.locais.length > 0 ? perfil.locais[0].nome : ""}
+              onChange={e => {
+                const localAtual = perfil.locais && perfil.locais.length > 0 ? perfil.locais[0] : undefined;
+                setPerfil({
+                  ...perfil,
+                  locais: [
+                    {
+                      nome: e.target.value,
+                      id: localAtual && typeof localAtual.id === 'number' ? localAtual.id : 0,
+                      cidade: localAtual && typeof localAtual.cidade === 'string' ? localAtual.cidade : ""
+                    }
+                  ]
+                });
+              }}
+              className="border border-gray-300 rounded-lg px-3 py-2 w-full"
+            />
           </div>
+        </div>
 
         <div className="mb-6">
           <h2 className="font-bold text-lg mb-2">Código de Identificação</h2>

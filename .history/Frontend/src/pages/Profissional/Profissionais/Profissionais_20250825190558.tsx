@@ -1,5 +1,6 @@
 // src/pages/Profissionais.tsx
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, MapPin, Linkedin, Facebook, Instagram, Filter, Eye, MessageSquare, Check, UserPlus } from "lucide-react";
 import type { Profissional as ApiProfissional } from "../../../api/protected/axiosProfissionais";
 
@@ -18,6 +19,10 @@ import {
 } from "../../../api/protected/axiosAmizade";
 
 // --- Tipagem estendida do profissional para a UI
+
+const Profissionais = () => {
+  const navigate = useNavigate();
+  // ...existing code...
 interface Profissional extends ApiProfissional {
   status: "Online" | "Offline";
   codigo?: string;
@@ -81,7 +86,6 @@ function SocialIcons({ prof }: { prof: Profissional }) {
 // --- Componente principal ---
 export default function Profissionais() {
   // --- States ---
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<'todos' | 'conexoes'>('todos');
   const [searchInput, setSearchInput] = useState("");
   const [searching, setSearching] = useState(false);
@@ -241,11 +245,7 @@ export default function Profissionais() {
           <div className="flex items-center gap-4">
             <button
               className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
-              onClick={() => {
-                if (searchInputRef.current) {
-                  searchInputRef.current.focus();
-                }
-              }}
+              onClick={() => navigate("/profissional/pesquisar")}
             >
               <span className="text-lg">+</span>
               Adicionar
@@ -340,7 +340,6 @@ export default function Profissionais() {
               <Search className="text-gray-400 w-5 h-5" />
             </div>
             <input
-              ref={searchInputRef}
         type="text"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}

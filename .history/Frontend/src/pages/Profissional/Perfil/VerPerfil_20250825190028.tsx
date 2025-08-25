@@ -158,10 +158,10 @@ export default function PerfilProfissional() {
                     {perfil.locais.map((local, idx) => (
                       <li key={idx} className="flex items-center text-gray-700">
                         <FaMapMarkerAlt className="text-green-600 mr-2" />
-                        <span className="font-medium">{local.nome || "-"}</span>
-                        {local.cidade && (
-                          <span className="ml-2 text-gray-400">{local.cidade}</span>
-                        )}
+                        <span>
+                          {local.nome || "-"}
+                          {local.cidade ? ` - ${local.cidade}` : ""}
+                        </span>
                       </li>
                     ))}
                   </ul>

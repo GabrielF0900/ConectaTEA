@@ -81,7 +81,6 @@ function SocialIcons({ prof }: { prof: Profissional }) {
 // --- Componente principal ---
 export default function Profissionais() {
   // --- States ---
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<'todos' | 'conexoes'>('todos');
   const [searchInput, setSearchInput] = useState("");
   const [searching, setSearching] = useState(false);
@@ -239,14 +238,7 @@ export default function Profissionais() {
 
           {/* Actions on the right */}
           <div className="flex items-center gap-4">
-            <button
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
-              onClick={() => {
-                if (searchInputRef.current) {
-                  searchInputRef.current.focus();
-                }
-              }}
-            >
+            <button className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
               <span className="text-lg">+</span>
               Adicionar
             </button>
@@ -340,7 +332,6 @@ export default function Profissionais() {
               <Search className="text-gray-400 w-5 h-5" />
             </div>
             <input
-              ref={searchInputRef}
         type="text"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
