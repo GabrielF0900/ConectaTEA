@@ -1,23 +1,15 @@
 // src/pages/Profissionais.tsx
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Search, MapPin, Linkedin, Facebook, Instagram, Filter, Eye, MessageSquare, Check, UserPlus } from "lucide-react";
+import { listarProfissionais, obterProfissionalPorUsuarioId } from "../../../api/protected/axiosProfissionais";
 import type { Profissional as ApiProfissional } from "../../../api/protected/axiosProfissionais";
 
-import {
-  listarProfissionais,
-  obterProfissionalPorUsuarioId
-} from "../../../api/protected/axiosProfissionais";
 
-import {
-  enviarSolicitacao,
-  aceitarSolicitacao,
-  removerSolicitacao,
-  listarSolicitacoesRecebidas,
-  listarSolicitacoesEnviadas,
-  listarConexoesPorProfissional
-} from "../../../api/protected/axiosAmizade";
 
-// --- Tipagem estendida do profissional para a UI
+import { enviarSolicitacao, aceitarSolicitacao, listarSolicitacoesRecebidas, listarSolicitacoesEnviadas, listarConexoesPorProfissional, removerSolicitacao } from "../../../api/protected/axiosAmizade";
+// tipo ConexaoProfissional não é necessário aqui — removido
+
+
 interface Profissional extends ApiProfissional {
   status: "Online" | "Offline";
   codigo?: string;
@@ -26,167 +18,224 @@ interface Profissional extends ApiProfissional {
   avatar?: string;
 }
 
-// --- Helpers ---
-
-// Retorna o ID do usuário logado
-function getLoggedUserId(): number | null {
+// Helpers: leitura segura do localStorage para evitar duplicação
+function getStoredUserId(): number | null {
   const userData = localStorage.getItem("user");
   if (userData) {
-    try { const u = JSON.parse(userData); return u?.id ?? u?.userId ?? null; } catch { return null; }
+    try {
+      const u = JSON.parse(userData);
+      return u?.id ?? u?.userId ?? null;
+    } catch {
+      return null;
+    }
   }
   const token = localStorage.getItem("token");
   if (token) {
-    try { const payload = JSON.parse(atob(token.split(".")[1])); return payload?.id ?? payload?.userId ?? null; } catch { return null; }
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload?.id ?? payload?.userId ?? null;
+    } catch {
+      return null;
+    }
   }
   return null;
 }
 
-// Retorna a URL de rede social de um profissional
-function getRedeUrl(prof: Profissional, tipoBusca: string): string | null {
-  const tipo = tipoBusca.toLowerCase();
+function getStoredUserName(): string | null {
+  const userData = localStorage.getItem("user");
+  if (!userData) return null;
+  try {
+    const u = JSON.parse(userData);
+    return u?.name ?? u?.nome ?? null;
+  } catch {
+    return null;
+  }
+}
 
-  if (prof.redes) {
-    const val = prof.redes[tipo] ?? prof.redes[tipoBusca];
+// helper: retorna URL de rede social procurando em dois formatos possíveis
+function getRedeUrl(prof: Profissional, tipoBusca: string) {
+  const keyLower = tipoBusca.toLowerCase();
+  if (prof.redes && typeof prof.redes === 'object') {
+    const val = (prof.redes as Record<string, string | null>)[keyLower] ?? (prof.redes as Record<string, string | null>)[tipoBusca];
     if (val) return val;
   }
-
-  const redesArray = prof.redesArray ?? prof.redesSociais ?? [];
-  if (Array.isArray(redesArray)) {
-    const found = redesArray.find(r => r.tipo?.toLowerCase().includes(tipo));
-    if (found?.url) return found.url;
+  if (prof.redesArray && Array.isArray(prof.redesArray)) {
+    const found = prof.redesArray.find((r) => r?.tipo && String(r.tipo).toLowerCase().includes(keyLower));
+    if (found) return found.url ?? null;
   }
-
+  if (prof.redesSociais && Array.isArray(prof.redesSociais)) {
+    const found = prof.redesSociais.find((r) => r?.tipo && String(r.tipo).toLowerCase().includes(keyLower));
+    if (found) return found.url ?? null;
+  }
   return null;
 }
 
-// Componente para ícones de redes sociais
+// Subcomponent para ícones de redes sociais
 function SocialIcons({ prof }: { prof: Profissional }) {
-  const redes = [
-    { tipo: 'linkedin', Icon: Linkedin, color: 'text-blue-600' },
-    { tipo: 'facebook', Icon: Facebook, color: 'text-blue-500' },
-    { tipo: 'instagram', Icon: Instagram, color: 'text-pink-500' },
-  ];
-
+  const ln = getRedeUrl(prof, 'linkedin');
+  const fb = getRedeUrl(prof, 'facebook');
+  const ig = getRedeUrl(prof, 'instagram');
   return (
     <div className="flex gap-3 mt-1">
-      {redes.map(({ tipo, Icon, color }) => {
-        const url = getRedeUrl(prof, tipo);
-        if (!url) return null;
-        return <a key={tipo} href={url} target="_blank" rel="noreferrer"><Icon className={`w-5 h-5 ${color}`} /></a>;
-      })}
+      {ln && (
+        <a href={ln} target="_blank" rel="noreferrer"><Linkedin className="w-5 h-5 text-blue-600 cursor-pointer" /></a>
+      )}
+      {fb && (
+        <a href={fb} target="_blank" rel="noreferrer"><Facebook className="w-5 h-5 text-blue-500 cursor-pointer" /></a>
+      )}
+      {ig && (
+        <a href={ig} target="_blank" rel="noreferrer"><Instagram className="w-5 h-5 text-pink-500 cursor-pointer" /></a>
+      )}
     </div>
   );
 }
 
-// --- Componente principal ---
+// removed mock data; using real data from API
+
 export default function Profissionais() {
-  // --- States ---
-  const [tab, setTab] = useState<'todos' | 'conexoes'>('todos');
+  const [tab, setTab] = useState("todos");
+  const [openMenu, setOpenMenu] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searching, setSearching] = useState(false);
-  const [openMenu, setOpenMenu] = useState(false);
+  const searchDebounceRef = useRef<number | null>(null);
+
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [loggedProfissionalId, setLoggedProfissionalId] = useState<number | null>(null);
+  // estado local para controlar carregamento de requests não necessário aqui
 
-  const searchDebounceRef = useRef<number | null>(null);
-  const loggedUserId = getLoggedUserId();
+  // id do usuário logado (lido com helper centralizado)
+  const storedUserId = getStoredUserId();
+  const loggedUserId = storedUserId;
 
-  // --- Funções de conexão ---
-  const handleConectar = async (prof: Profissional) => {
-    if (!loggedUserId) return;
-
+  async function handleConectar(prof: Profissional) {
+    if (!storedUserId) return;
     try {
+      // Preferir enviar ids de profissional quando já tivermos o id do profissional logado
       let solicitanteProfId = loggedProfissionalId;
 
-      if (!solicitanteProfId) {
-        const profLog = await obterProfissionalPorUsuarioId(loggedUserId);
-        if (profLog?.id) { 
-          solicitanteProfId = profLog.id; 
-          setLoggedProfissionalId(profLog.id); 
+  if (!solicitanteProfId) {
+        // tentar resolver profissional do usuário logado em tempo de envio (pode não ter sido carregado ainda)
+        try {
+          const profLog = await obterProfissionalPorUsuarioId(loggedUserId);
+          if (profLog && profLog.id) {
+            solicitanteProfId = profLog.id;
+            setLoggedProfissionalId(profLog.id);
+          }
+        } catch (e) {
+          console.warn('Não foi possível resolver profissional do usuário logado antes de enviar solicitação:', e);
         }
       }
 
-      if (solicitanteProfId) await enviarSolicitacao(solicitanteProfId, prof.id, { tipo: 'prof' });
-      else await enviarSolicitacao(loggedUserId, prof.usuario_id ?? prof.id);
+      if (solicitanteProfId) {
+        await enviarSolicitacao(solicitanteProfId, prof.id, { tipo: 'prof' });
+      } else {
+        try {
+          await enviarSolicitacao(storedUserId, prof.usuario_id ?? prof.id);
+        } catch (e) {
+          console.error('Erro ao enviar solicitação (fallback por userId):', e);
+          return;
+        }
+      }
 
-      setProfissionais(prev => prev.map(p => p.id === prof.id ? { ...p, requestStatus: 'sent' } : p));
+      // marcar localmente como 'sent'
+      setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, requestStatus: 'sent' } : p)));
     } catch (err) {
       console.error("Erro ao enviar solicitação:", err);
     }
-  };
+  }
 
-  const handleAceitar = async (prof: Profissional) => {
+  async function handleAceitar(prof: Profissional) {
+    // precisamos enviar ids de profissional (solicitante_id, solicitado_id)
     if (!loggedProfissionalId) return;
-
     try {
-      await aceitarSolicitacao(prof.id, loggedProfissionalId, { tipo: 'prof' });
-
-      setProfissionais(prev =>
-        prev.map(p => p.id === prof.id ? { ...p, conectado: true, requestStatus: undefined } : p)
-      );
-
-      const conex = await listarConexoesPorProfissional(loggedProfissionalId);
-      const connectedIds = new Set(conex.flatMap(c => [c.solicitante_id, c.solicitado_id]));
-      setProfissionais(prev => prev.map(p => ({ ...p, conectado: connectedIds.has(p.id) } as Profissional)));
+  // enviar (solicitanteProfId, solicitadoProfId)
+  await aceitarSolicitacao(prof.id, loggedProfissionalId, { tipo: 'prof' });
+      // atualizar localmente: conectado
+      setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, requestStatus: undefined, conectado: true } : p)));
+      // opcional: carregar conexoes novamente
+      try {
+        if (loggedProfissionalId) {
+          const conex = await listarConexoesPorProfissional(loggedProfissionalId);
+          // atualizar marcação de conectado baseado nas conexoes retornadas
+          const connectedIds = new Set<number>();
+          conex.forEach(c => {
+            connectedIds.add(c.solicitante_id);
+            connectedIds.add(c.solicitado_id);
+          });
+          setProfissionais((prev) => prev.map(p => ({ ...p, conectado: connectedIds.has(p.id) } as Profissional)));
+        }
+      } catch (e) {
+        console.warn('Erro ao recarregar conexoes após aceitar:', e);
+      }
     } catch (err) {
       console.error("Erro ao aceitar solicitação:", err);
     }
-  };
+  }
 
-  const handleRecusar = async (prof: Profissional) => {
+  async function handleRecusar(prof: Profissional) {
     if (!loggedProfissionalId) return;
-
     try {
+      // recusar: enviar dados como profissional autenticado sendo o solicitado
       await removerSolicitacao(prof.id, loggedProfissionalId, { tipo: 'prof' });
-      setProfissionais(prev => prev.map(p => p.id === prof.id ? { ...p, requestStatus: undefined } : p));
+      setProfissionais((prev) => prev.map((p) => (p.id === prof.id ? { ...p, requestStatus: undefined } : p)));
     } catch (err) {
       console.error('Erro ao recusar solicitação:', err);
     }
-  };
+  }
 
-  // --- Fetch profissionais ---
   const fetchProfissionais = useCallback(async (search?: string) => {
-    setSearching(!!search);
     try {
+      setSearching(!!search);
       const dados = await listarProfissionais(search ? { search } : undefined);
+      // normalizar cada profissional retornado pela API para uso no UI
+      const mapeados: Profissional[] = dados.map((d) => normalizeProfissional(d));
 
-      const mapeados: Profissional[] = dados.map(d => ({
-        ...d,
-        status: (d as unknown as Profissional).status ?? "Offline",
-        codigo: d.codigoIdentificacao ?? "",
-        avatar: d.fotoPerfilUrl ?? undefined,
-        conectado: false,
-        requestStatus: undefined,
-      }));
+      // filtrar o próprio usuário/profissional da listagem
+      const filtrados = mapeados.filter((p) => {
+        if (storedUserId && p.usuario_id && p.usuario_id === storedUserId) return false;
+        if (loggedProfissionalId && p.id === loggedProfissionalId) return false;
+        return true;
+      });
 
-      // Filtra próprio usuário
-      const filtrados = mapeados.filter(p =>
-        !(loggedUserId && p.usuario_id === loggedUserId) &&
-        !(loggedProfissionalId && p.id === loggedProfissionalId)
-      );
       setProfissionais(filtrados);
-
-      // Marca solicitações e conexões
+      // se já temos usuário logado, carregar solicitações e conexões para marcar os cards
       if (loggedUserId) {
-        const [recebidas, enviadas] = await Promise.all([
-          listarSolicitacoesRecebidas(loggedUserId),
-          listarSolicitacoesEnviadas(loggedUserId),
-        ]);
+        try {
+          const [recebidas, enviadas] = await Promise.all([
+            listarSolicitacoesRecebidas(loggedUserId),
+            listarSolicitacoesEnviadas(loggedUserId),
+          ]);
 
-        const recebidasIds = new Set(recebidas.map(r => r.solicitante_id));
-        const enviadasIds = new Set(enviadas.map(r => r.solicitado_id));
+          const recebidasFromIds = new Set<number>();
+          recebidas.forEach((r) => recebidasFromIds.add(r.solicitante_id));
 
-        setProfissionais(prev =>
-          prev.map(p => ({
-            ...p,
-            requestStatus: recebidasIds.has(p.id) ? 'received' : enviadasIds.has(p.id) ? 'sent' : undefined
-          }))
-        );
+          const enviadasToIds = new Set<number>();
+          enviadas.forEach((r) => enviadasToIds.add(r.solicitado_id));
 
-        if (loggedProfissionalId) {
-          const conex = await listarConexoesPorProfissional(loggedProfissionalId);
-          const connectedIds = new Set(conex.flatMap(c => [c.solicitante_id, c.solicitado_id]));
-          setProfissionais(prev => prev.map(p => ({ ...p, conectado: connectedIds.has(p.id) } as Profissional)));
+          // marcar
+          setProfissionais((prev) =>
+            prev.map((p) => ({
+              ...p,
+              requestStatus: recebidasFromIds.has(p.id) ? "received" : enviadasToIds.has(p.id) ? "sent" : undefined,
+            }))
+          );
+
+          // carregar conexoes aceitas se temos id de profissional
+          if (loggedProfissionalId) {
+            try {
+              const conex = await listarConexoesPorProfissional(loggedProfissionalId);
+              const connectedIds = new Set<number>();
+              conex.forEach((c) => {
+                connectedIds.add(c.solicitante_id);
+                connectedIds.add(c.solicitado_id);
+              });
+              setProfissionais((prev) => prev.map((p) => ({ ...p, conectado: connectedIds.has(p.id) } as Profissional)));
+            } catch (e) {
+              console.warn("Erro ao carregar conexoes:", e);
+            }
+          }
+        } catch (e) {
+          console.warn("Erro ao carregar solicitações/conexões:", e);
         }
       }
     } catch (err) {
@@ -196,33 +245,108 @@ export default function Profissionais() {
     }
   }, [loggedUserId, loggedProfissionalId]);
 
-  // --- Carrega profissionais e resolve o profissional do usuário ao montar ---
   useEffect(() => {
     async function carregar() {
-      await fetchProfissionais();
-      if (loggedUserId) {
+  // Busca e popula a lista de profissionais (fetchProfissionais já faz o mapeamento)
+  await fetchProfissionais();
+
+  // Se temos um usuário logado, tenta resolver o profissional associado
+      const userData = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+      let userId: number | null = null;
+      if (userData) {
         try {
-          const profLog = await obterProfissionalPorUsuarioId(loggedUserId);
-          if (profLog?.id) setLoggedProfissionalId(profLog.id);
+          const u = JSON.parse(userData);
+          userId = u?.id ?? u?.userId ?? null;
         } catch (err) {
-          console.warn('Erro ao resolver profissional do usuário logado:', err);
+          console.warn("Erro ao parsear userData:", err);
+        }
+      }
+      if (!userId && token) {
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          userId = payload?.id ?? payload?.userId ?? null;
+        } catch (err) {
+          console.warn("Erro ao decodificar token:", err);
+        }
+      }
+
+    if (userId) {
+        try {
+          const profLog = await obterProfissionalPorUsuarioId(userId);
+          if (profLog && profLog.id) setLoggedProfissionalId(profLog.id);
+        } catch (err) {
+          console.warn("Erro ao obter profissional do usuário logado:", err);
         }
       }
     }
 
     carregar();
-  }, [fetchProfissionais, loggedUserId]);
+  }, [fetchProfissionais]);
 
-  // --- Debounce de busca ---
+  // Busca profissionais, opcionalmente usando o parâmetro de search
+  // fetchProfissionais definido acima via arrow function
+
+  // debounce do input de busca
   useEffect(() => {
-    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
-    searchDebounceRef.current = window.setTimeout(() => fetchProfissionais(searchInput.trim() || undefined), 300) as unknown as number;
-    return () => { if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current); };
+    if (searchDebounceRef.current) window.clearTimeout(searchDebounceRef.current);
+    // se campo vazio, busca todos
+    searchDebounceRef.current = window.setTimeout(() => {
+      fetchProfissionais(searchInput.trim() || undefined);
+    }, 300) as unknown as number;
+
+    return () => {
+      if (searchDebounceRef.current) window.clearTimeout(searchDebounceRef.current);
+    };
   }, [searchInput, fetchProfissionais]);
 
-  // --- Dados para renderização ---
-  const conexoesCount = profissionais.filter(p => p.conectado).length;
-  const displayed = tab === "todos" ? profissionais : profissionais.filter(p => p.conectado);
+  const conexoesCount = profissionais.filter((p) => p.conectado).length;
+  const displayed = tab === "todos" ? profissionais : profissionais.filter((p) => p.conectado);
+
+  // helper: retorna URL de rede social procurando em dois formatos possíveis
+  function getRedeUrl(prof: Profissional, tipoBusca: string) {
+    // checa objeto de redes (mapa)
+    const keyLower = tipoBusca.toLowerCase();
+    if (prof.redes && typeof prof.redes === 'object') {
+      // pode ser { linkedin: 'url', instagram: 'url' }
+      const val = (prof.redes as Record<string, string | null>)[keyLower] ?? (prof.redes as Record<string, string | null>)[tipoBusca];
+      if (val) return val;
+    }
+    // checa array de redes (redesArray)
+    if (prof.redesArray && Array.isArray(prof.redesArray)) {
+      const found = prof.redesArray.find((r) => r?.tipo && String(r.tipo).toLowerCase().includes(keyLower));
+      if (found) return found.url ?? null;
+    }
+    // checa redes sociais relacionais (redesSociais) formato backend
+    if (prof.redesSociais && Array.isArray(prof.redesSociais)) {
+      const found = prof.redesSociais.find((r) => r?.tipo && String(r.tipo).toLowerCase().includes(keyLower));
+      if (found) return found.url ?? null;
+    }
+    return null;
+  }
+
+  // normaliza objeto vindo da API para shape usado na UI
+  function normalizeProfissional(d: ApiProfissional): Profissional {
+    const src = d;
+    const base: Profissional = {
+      ...src,
+      status: 'Offline',
+      codigo: src.codigoIdentificacao ?? undefined,
+      avatar: src.fotoPerfilUrl ?? undefined,
+      conectado: false,
+      requestStatus: undefined,
+    } as Profissional;
+
+    // garantir arrays/formatos previsíveis
+    if (!base.locais) base.locais = [];
+    if (!base.areas) base.areas = [];
+    if (!base.redes) base.redes = {};
+    if (!base.redesArray) base.redesArray = [];
+    if (!base.redesSociais) base.redesSociais = [];
+
+    return base;
+  }
+
   
 
   return (
@@ -261,7 +385,7 @@ export default function Profissionais() {
                   className="w-9 h-9 rounded-full border"
                 />
                 <div className="text-left">
-                  <div className="font-semibold">{localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string).name || JSON.parse(localStorage.getItem('user') as string).nome : 'Perfil'}</div>
+                  <div className="font-semibold">{getStoredUserName() ?? 'Perfil'}</div>
                   <div className="text-xs bg-green-100 text-green-600 rounded px-2 py-1">PROFISSIONAL</div>
                 </div>
                 <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -426,7 +550,7 @@ export default function Profissionais() {
 
               <div className="mb-3 text-sm">
                 <h3 className="font-medium">Redes sociais</h3>
-                <SocialIcons prof={prof} />
+                  <SocialIcons prof={prof} />
               </div>
 
               <div className="flex flex-wrap gap-2 mb-4">

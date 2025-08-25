@@ -1,23 +1,15 @@
 // src/pages/Profissionais.tsx
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Search, MapPin, Linkedin, Facebook, Instagram, Filter, Eye, MessageSquare, Check, UserPlus } from "lucide-react";
+import { listarProfissionais, obterProfissionalPorUsuarioId } from "../../../api/protected/axiosProfissionais";
 import type { Profissional as ApiProfissional } from "../../../api/protected/axiosProfissionais";
 
-import {
-  listarProfissionais,
-  obterProfissionalPorUsuarioId
-} from "../../../api/protected/axiosProfissionais";
 
-import {
-  enviarSolicitacao,
-  aceitarSolicitacao,
-  removerSolicitacao,
-  listarSolicitacoesRecebidas,
-  listarSolicitacoesEnviadas,
-  listarConexoesPorProfissional
-} from "../../../api/protected/axiosAmizade";
 
-// --- Tipagem estendida do profissional para a UI
+import { enviarSolicitacao, aceitarSolicitacao, listarSolicitacoesRecebidas, listarSolicitacoesEnviadas, listarConexoesPorProfissional, removerSolicitacao } from "../../../api/protected/axiosAmizade";
+// tipo ConexaoProfissional não é necessário aqui — removido
+
+
 interface Profissional extends ApiProfissional {
   status: "Online" | "Offline";
   codigo?: string;
@@ -26,9 +18,7 @@ interface Profissional extends ApiProfissional {
   avatar?: string;
 }
 
-// --- Helpers ---
-
-// Retorna o ID do usuário logado
+// --- Helper: obtém usuário logado
 function getLoggedUserId(): number | null {
   const userData = localStorage.getItem("user");
   if (userData) {
@@ -41,25 +31,22 @@ function getLoggedUserId(): number | null {
   return null;
 }
 
-// Retorna a URL de rede social de um profissional
+// --- Helper: obtém URL de rede social
 function getRedeUrl(prof: Profissional, tipoBusca: string): string | null {
   const tipo = tipoBusca.toLowerCase();
-
   if (prof.redes) {
     const val = prof.redes[tipo] ?? prof.redes[tipoBusca];
     if (val) return val;
   }
-
   const redesArray = prof.redesArray ?? prof.redesSociais ?? [];
   if (Array.isArray(redesArray)) {
     const found = redesArray.find(r => r.tipo?.toLowerCase().includes(tipo));
     if (found?.url) return found.url;
   }
-
   return null;
 }
 
-// Componente para ícones de redes sociais
+// --- Componente de ícones sociais
 function SocialIcons({ prof }: { prof: Profissional }) {
   const redes = [
     { tipo: 'linkedin', Icon: Linkedin, color: 'text-blue-600' },
@@ -78,9 +65,7 @@ function SocialIcons({ prof }: { prof: Profissional }) {
   );
 }
 
-// --- Componente principal ---
 export default function Profissionais() {
-  // --- States ---
   const [tab, setTab] = useState<'todos' | 'conexoes'>('todos');
   const [searchInput, setSearchInput] = useState("");
   const [searching, setSearching] = useState(false);
@@ -91,65 +76,46 @@ export default function Profissionais() {
   const searchDebounceRef = useRef<number | null>(null);
   const loggedUserId = getLoggedUserId();
 
-  // --- Funções de conexão ---
+  // --- Funções de conexão
   const handleConectar = async (prof: Profissional) => {
     if (!loggedUserId) return;
-
     try {
       let solicitanteProfId = loggedProfissionalId;
-
       if (!solicitanteProfId) {
         const profLog = await obterProfissionalPorUsuarioId(loggedUserId);
-        if (profLog?.id) { 
-          solicitanteProfId = profLog.id; 
-          setLoggedProfissionalId(profLog.id); 
-        }
+        if (profLog?.id) { solicitanteProfId = profLog.id; setLoggedProfissionalId(profLog.id); }
       }
-
       if (solicitanteProfId) await enviarSolicitacao(solicitanteProfId, prof.id, { tipo: 'prof' });
       else await enviarSolicitacao(loggedUserId, prof.usuario_id ?? prof.id);
-
       setProfissionais(prev => prev.map(p => p.id === prof.id ? { ...p, requestStatus: 'sent' } : p));
-    } catch (err) {
-      console.error("Erro ao enviar solicitação:", err);
-    }
+    } catch (err) { console.error("Erro ao enviar solicitação:", err); }
   };
 
   const handleAceitar = async (prof: Profissional) => {
     if (!loggedProfissionalId) return;
-
     try {
       await aceitarSolicitacao(prof.id, loggedProfissionalId, { tipo: 'prof' });
-
-      setProfissionais(prev =>
-        prev.map(p => p.id === prof.id ? { ...p, conectado: true, requestStatus: undefined } : p)
-      );
+      setProfissionais(prev => prev.map(p => p.id === prof.id ? { ...p, conectado: true, requestStatus: undefined } : p));
 
       const conex = await listarConexoesPorProfissional(loggedProfissionalId);
       const connectedIds = new Set(conex.flatMap(c => [c.solicitante_id, c.solicitado_id]));
       setProfissionais(prev => prev.map(p => ({ ...p, conectado: connectedIds.has(p.id) } as Profissional)));
-    } catch (err) {
-      console.error("Erro ao aceitar solicitação:", err);
-    }
+    } catch (err) { console.error("Erro ao aceitar solicitação:", err); }
   };
 
   const handleRecusar = async (prof: Profissional) => {
     if (!loggedProfissionalId) return;
-
     try {
       await removerSolicitacao(prof.id, loggedProfissionalId, { tipo: 'prof' });
       setProfissionais(prev => prev.map(p => p.id === prof.id ? { ...p, requestStatus: undefined } : p));
-    } catch (err) {
-      console.error('Erro ao recusar solicitação:', err);
-    }
+    } catch (err) { console.error('Erro ao recusar solicitação:', err); }
   };
 
-  // --- Fetch profissionais ---
+  // --- Fetch profissionais
   const fetchProfissionais = useCallback(async (search?: string) => {
     setSearching(!!search);
     try {
       const dados = await listarProfissionais(search ? { search } : undefined);
-
       const mapeados: Profissional[] = dados.map(d => ({
         ...d,
         status: (d as unknown as Profissional).status ?? "Offline",
@@ -159,28 +125,22 @@ export default function Profissionais() {
         requestStatus: undefined,
       }));
 
-      // Filtra próprio usuário
       const filtrados = mapeados.filter(p =>
         !(loggedUserId && p.usuario_id === loggedUserId) &&
         !(loggedProfissionalId && p.id === loggedProfissionalId)
       );
       setProfissionais(filtrados);
 
-      // Marca solicitações e conexões
       if (loggedUserId) {
         const [recebidas, enviadas] = await Promise.all([
           listarSolicitacoesRecebidas(loggedUserId),
           listarSolicitacoesEnviadas(loggedUserId),
         ]);
-
         const recebidasIds = new Set(recebidas.map(r => r.solicitante_id));
         const enviadasIds = new Set(enviadas.map(r => r.solicitado_id));
 
         setProfissionais(prev =>
-          prev.map(p => ({
-            ...p,
-            requestStatus: recebidasIds.has(p.id) ? 'received' : enviadasIds.has(p.id) ? 'sent' : undefined
-          }))
+          prev.map(p => ({ ...p, requestStatus: recebidasIds.has(p.id) ? 'received' : enviadasIds.has(p.id) ? 'sent' : undefined }))
         );
 
         if (loggedProfissionalId) {
@@ -189,40 +149,23 @@ export default function Profissionais() {
           setProfissionais(prev => prev.map(p => ({ ...p, conectado: connectedIds.has(p.id) } as Profissional)));
         }
       }
-    } catch (err) {
-      console.error("Erro ao buscar profissionais:", err);
-    } finally {
-      setSearching(false);
-    }
+    } catch (err) { console.error("Erro ao buscar profissionais:", err); }
+    finally { setSearching(false); }
   }, [loggedUserId, loggedProfissionalId]);
 
-  // --- Carrega profissionais e resolve o profissional do usuário ao montar ---
-  useEffect(() => {
-    async function carregar() {
-      await fetchProfissionais();
-      if (loggedUserId) {
-        try {
-          const profLog = await obterProfissionalPorUsuarioId(loggedUserId);
-          if (profLog?.id) setLoggedProfissionalId(profLog.id);
-        } catch (err) {
-          console.warn('Erro ao resolver profissional do usuário logado:', err);
-        }
-      }
-    }
+  // --- Carregar profissionais ao montar
+  useEffect(() => { fetchProfissionais(); }, [fetchProfissionais]);
 
-    carregar();
-  }, [fetchProfissionais, loggedUserId]);
-
-  // --- Debounce de busca ---
+  // --- Debounce busca
   useEffect(() => {
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     searchDebounceRef.current = window.setTimeout(() => fetchProfissionais(searchInput.trim() || undefined), 300) as unknown as number;
     return () => { if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current); };
   }, [searchInput, fetchProfissionais]);
 
-  // --- Dados para renderização ---
-  const conexoesCount = profissionais.filter(p => p.conectado).length;
   const displayed = tab === "todos" ? profissionais : profissionais.filter(p => p.conectado);
+
+
   
 
   return (
@@ -426,7 +369,17 @@ export default function Profissionais() {
 
               <div className="mb-3 text-sm">
                 <h3 className="font-medium">Redes sociais</h3>
-                <SocialIcons prof={prof} />
+                  <div className="flex gap-3 mt-1">
+                    {getRedeUrl(prof, 'linkedin') && (
+                      <a href={getRedeUrl(prof, 'linkedin')!} target="_blank" rel="noreferrer"><Linkedin className="w-5 h-5 text-blue-600 cursor-pointer" /></a>
+                    )}
+                    {getRedeUrl(prof, 'facebook') && (
+                      <a href={getRedeUrl(prof, 'facebook')!} target="_blank" rel="noreferrer"><Facebook className="w-5 h-5 text-blue-500 cursor-pointer" /></a>
+                    )}
+                    {getRedeUrl(prof, 'instagram') && (
+                      <a href={getRedeUrl(prof, 'instagram')!} target="_blank" rel="noreferrer"><Instagram className="w-5 h-5 text-pink-500 cursor-pointer" /></a>
+                    )}
+                  </div>
               </div>
 
               <div className="flex flex-wrap gap-2 mb-4">

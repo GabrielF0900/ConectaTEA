@@ -196,22 +196,8 @@ export default function Profissionais() {
     }
   }, [loggedUserId, loggedProfissionalId]);
 
-  // --- Carrega profissionais e resolve o profissional do usuário ao montar ---
-  useEffect(() => {
-    async function carregar() {
-      await fetchProfissionais();
-      if (loggedUserId) {
-        try {
-          const profLog = await obterProfissionalPorUsuarioId(loggedUserId);
-          if (profLog?.id) setLoggedProfissionalId(profLog.id);
-        } catch (err) {
-          console.warn('Erro ao resolver profissional do usuário logado:', err);
-        }
-      }
-    }
-
-    carregar();
-  }, [fetchProfissionais, loggedUserId]);
+  // --- Carrega profissionais ao montar ---
+  useEffect(() => { fetchProfissionais(); }, [fetchProfissionais]);
 
   // --- Debounce de busca ---
   useEffect(() => {
