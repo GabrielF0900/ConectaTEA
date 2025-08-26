@@ -301,7 +301,7 @@ export default function MetasPage() {
       </div>
 
       {/* Busca + Filtro */}
-  <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-4 px-4 md:px-8 shadow-sm">
+      <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="relative w-full md:max-w-xl">
             <input
@@ -318,7 +318,7 @@ export default function MetasPage() {
       </div>
 
       {/* Lista de Metas */}
-  <div className="mt-6 space-y-5 px-4 md:px-8">
+      <div className="mt-6 space-y-5">
         {metas.map((m) => (
           <MetaCard key={m.id} meta={m} />
         ))}

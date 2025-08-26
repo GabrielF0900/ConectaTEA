@@ -1,5 +1,5 @@
 import React from "react";
-import { TrendingUp, Filter, Eye, Pencil, CalendarDays, Target, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Plus, TrendingUp, Filter, Eye, Pencil, CalendarDays, Target, CheckCircle2, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Paleta (verde como identidade)
@@ -297,11 +297,16 @@ export default function MetasPage() {
           <SummaryCard icon={AlertTriangle} label="Vencendo" value={8} tooltip="Metas próximas do prazo de vencimento." />
           <SummaryCard icon={CheckCircle2} label="Concluídas" value={15} tooltip="Metas já concluídas." />
         </div>
-  {/* Espaço reservado para alinhamento, sem botão Nova Meta */}
+        <div className="flex flex-col md:flex-row md:items-center md:ml-8 mt-4 md:mt-0">
+          <button className="inline-flex items-center justify-center gap-2 rounded-md bg-green-700 px-6 py-2 font-medium text-white shadow hover:bg-green-800">
+            <Plus className="h-4 w-4" />
+            <span>Nova Meta</span>
+          </button>
+        </div>
       </div>
 
       {/* Busca + Filtro */}
-  <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-4 px-4 md:px-8 shadow-sm">
+      <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="relative w-full md:max-w-xl">
             <input
@@ -318,7 +323,7 @@ export default function MetasPage() {
       </div>
 
       {/* Lista de Metas */}
-  <div className="mt-6 space-y-5 px-4 md:px-8">
+      <div className="mt-6 space-y-5">
         {metas.map((m) => (
           <MetaCard key={m.id} meta={m} />
         ))}
