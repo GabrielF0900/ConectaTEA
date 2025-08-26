@@ -290,8 +290,8 @@ export default function MetasPage() {
                         localStorage.clear();
                         notificarSucesso('Logout realizado', 'Você saiu da sua conta com sucesso!');
                         setTimeout(() => {
-                          navigate('/login');
-                        }, 1000);
+                          window.location.href = '/login';
+                        }, 500);
                       }}
                     >Sair</button>
                   </button>

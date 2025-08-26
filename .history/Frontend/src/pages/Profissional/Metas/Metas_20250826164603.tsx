@@ -2,8 +2,6 @@ import React from "react";
 import { TrendingUp, Filter, Eye, Pencil, CalendarDays, Target, CheckCircle2, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { useNotificacoesContext } from '../../../api/barraNotificacao';
-
 // Paleta (verde como identidade)
 const colors = {
   green: {
@@ -214,7 +212,6 @@ function MetaCard({ meta }: { meta: Meta }) {
 export default function MetasPage() {
   const [openMenu, setOpenMenu] = React.useState(false);
   const navigate = useNavigate();
-  const { notificarSucesso } = useNotificacoesContext();
   return (
     <div className="h-full bg-[#f8f9fb]">
       {/* Header padrão com dropdown de perfil */}
@@ -288,10 +285,7 @@ export default function MetasPage() {
                       onClick={() => {
                         setOpenMenu(false);
                         localStorage.clear();
-                        notificarSucesso('Logout realizado', 'Você saiu da sua conta com sucesso!');
-                        setTimeout(() => {
-                          navigate('/login');
-                        }, 1000);
+                        window.location.href = '/login';
                       }}
                     >Sair</button>
                   </button>
