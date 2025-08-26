@@ -128,14 +128,14 @@ const metas: Meta[] = [
 
 function SummaryCard({ icon: Icon, label, value, tooltip }: { icon: React.ElementType; label: string; value: number | string; tooltip?: string }) {
   return (
-    <div className="relative rounded-2xl border border-gray-200 bg-white p-8 shadow-md group transition-all flex flex-col items-center justify-center min-w-[210px] min-h-[130px]">
-      <div className="flex items-center gap-4 text-green-700">
-        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-green-50">
-          <Icon className="h-7 w-7" />
+    <div className="relative rounded-2xl border border-gray-200 bg-white p-5 shadow-sm group transition-all flex flex-col items-center justify-center">
+      <div className="flex items-center gap-3 text-green-700">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-50">
+          <Icon className="h-5 w-5" />
         </div>
-        <div className="text-4xl font-bold">{value}</div>
+        <div className="text-3xl font-bold">{value}</div>
       </div>
-      <div className="mt-3 text-base text-gray-600 font-medium">{label}</div>
+      <div className="mt-1 text-sm text-gray-600">{label}</div>
       {tooltip && (
         <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg bg-green-700 px-4 py-2 text-xs text-white opacity-0 group-hover:opacity-100 group-hover:translate-y-[-10px] transition-all pointer-events-none shadow-lg">
           {tooltip}
