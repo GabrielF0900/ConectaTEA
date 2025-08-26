@@ -155,7 +155,7 @@ function MetaCard({ meta }: { meta: Meta }) {
   const statusTone: "default" | "success" | "warning" | "danger" = meta.status === "Concluída" ? "success" : "default";
 
   return (
-    <div className="relative rounded-2xl border border-gray-200 bg-white p-6 shadow-sm group transition-all cursor-pointer hover:shadow-2xl hover:border-green-500 focus-within:shadow-2xl focus-within:border-green-600">
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
