@@ -128,7 +128,12 @@ const metas: Meta[] = [
 
 function SummaryCard({ icon: Icon, label, value, tooltip }: { icon: React.ElementType; label: string; value: number | string; tooltip?: string }) {
   return (
-    <div className="relative rounded-2xl border border-gray-200 bg-white p-5 shadow-sm group transition-all flex flex-col items-center justify-center">
+    <div className="relative rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      {tooltip ? (
+        <div className="absolute -top-3 right-6 hidden rounded-full bg-green-700 px-3 py-1 text-xs text-white md:block">
+          {tooltip}
+        </div>
+      ) : null}
       <div className="flex items-center gap-3 text-green-700">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-50">
           <Icon className="h-5 w-5" />
@@ -136,23 +141,13 @@ function SummaryCard({ icon: Icon, label, value, tooltip }: { icon: React.Elemen
         <div className="text-3xl font-bold">{value}</div>
       </div>
       <div className="mt-1 text-sm text-gray-600">{label}</div>
-      {tooltip && (
-        <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg bg-green-700 px-4 py-2 text-xs text-white opacity-0 group-hover:opacity-100 group-hover:translate-y-[-10px] transition-all pointer-events-none shadow-lg">
-          {tooltip}
-        </div>
-      )}
     </div>
   );
 }
 
 function MetaCard({ meta }: { meta: Meta }) {
-  const prioridadeTone: "default" | "success" | "warning" | "danger" =
-    meta.prioridade === "alta"
-      ? "danger"
-      : meta.prioridade === "media"
-      ? "warning"
-      : "success";
-  const statusTone: "default" | "success" | "warning" | "danger" = meta.status === "Concluída" ? "success" : "default";
+  const prioridadeTone = meta.prioridade === "alta" ? "danger" : meta.prioridade === "media" ? "warning" : "success";
+  const statusTone = meta.status === "Concluída" ? "success" : "default";
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -160,7 +155,7 @@ function MetaCard({ meta }: { meta: Meta }) {
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-xl font-semibold text-gray-900">{meta.titulo}</h3>
-            <Badge tone={statusTone}>{meta.status}</Badge>
+            <Badge tone={statusTone as any}>{meta.status}</Badge>
           </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -202,7 +197,7 @@ function MetaCard({ meta }: { meta: Meta }) {
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <button className="rounded-md border border-green-300 px-3 py-1 text-xs font-medium text-green-800 hover:bg-green-50">+5%</button>
         <button className="rounded-md border border-green-300 px-3 py-1 text-xs font-medium text-green-800 hover:bg-green-50">+10%</button>
-  <Badge tone={prioridadeTone}>Prioridade {meta.prioridade}</Badge>
+        <Badge tone={prioridadeTone as any}>Prioridade {meta.prioridade}</Badge>
       </div>
     </div>
   );
@@ -219,11 +214,11 @@ export default function MetasPage() {
 
       {/* Toolbar topo */}
       <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-row gap-4 w-full">
-          <SummaryCard icon={Target} label="Total de Metas" value={47} tooltip="Quantidade total de metas cadastradas." />
-          <SummaryCard icon={TrendingUp} label="Em Andamento" value={32} tooltip="Metas que estão em andamento no momento." />
-          <SummaryCard icon={AlertTriangle} label="Vencendo" value={8} tooltip="Metas próximas do prazo de vencimento." />
-          <SummaryCard icon={CheckCircle2} label="Concluídas" value={15} tooltip="Metas já concluídas." />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <SummaryCard icon={Target} label="Total de Metas" value={47} />
+          <SummaryCard icon={TrendingUp} label="Em Andamento" value={32} tooltip="Metas próximas do prazo de conclusão" />
+          <SummaryCard icon={AlertTriangle} label="Vencendo" value={8} />
+          <SummaryCard icon={CheckCircle2} label="Concluídas" value={15} />
         </div>
         <button className="inline-flex items-center justify-center gap-2 self-start rounded-md bg-green-700 px-4 py-2 font-medium text-white shadow hover:bg-green-800 md:self-auto">
           <Plus className="h-4 w-4" />

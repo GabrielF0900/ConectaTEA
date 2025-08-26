@@ -109,15 +109,6 @@ export default function AppRoutes() {
         } 
       />
 
-       <Route 
-        path="/profissional/metas" 
-        element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
-            <MetasPage />
-          </ProtectedRoute>
-        } 
-      />
-
       {/* Rotas do Responsável */}
       <Route 
         path="/responsavel/dashboard" 

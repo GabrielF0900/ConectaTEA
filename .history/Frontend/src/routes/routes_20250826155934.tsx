@@ -1,4 +1,13 @@
 import MetasPage from '../pages/Profissional/Metas/Metas';
+
+      <Route 
+        path="/profissional/metas" 
+        element={
+          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
+            <MetasPage />
+          </ProtectedRoute>
+        } 
+      />
 import { Routes, Route } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -105,15 +114,6 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
             <PerfilEdit />
-          </ProtectedRoute>
-        } 
-      />
-
-       <Route 
-        path="/profissional/metas" 
-        element={
-          <ProtectedRoute allowedRoles={['PROFISSIONAL']}>
-            <MetasPage />
           </ProtectedRoute>
         } 
       />
