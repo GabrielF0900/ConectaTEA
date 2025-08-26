@@ -28,13 +28,6 @@ enum StatusMeta {
   CONCLUIDA
 }
 
-enum CategoriaMeta {
-  COMUNICACAO
-  SOCIAL
-  COGNITIVA
-  COMPORTAMENTAL
-}
-
 enum Parentesco {
   PAI
   MAE

@@ -19,22 +19,6 @@ enum PrioridadeMeta {
   ALTA
 }
 
-
-
-enum StatusMeta {
-  EM_ANDAMENTO
-  VENCENDO
-  QUASE_CONCLUIDA
-  CONCLUIDA
-}
-
-enum CategoriaMeta {
-  COMUNICACAO
-  SOCIAL
-  COGNITIVA
-  COMPORTAMENTAL
-}
-
 enum Parentesco {
   PAI
   MAE
@@ -198,21 +182,15 @@ model Sessoes {
 }
 
 model Meta {
-  id          Int            @id @default(autoincrement())
-  titulo      String
+  id          Int      @id @default(autoincrement())
   descricao   String
-  categoria   CategoriaMeta
-  prioridade  PrioridadeMeta
-  status      StatusMeta     @default(EM_ANDAMENTO)
-  progresso   Int            @default(0) // porcentagem
   crianca_id  Int
   data_inicio DateTime
   data_fim    DateTime
 
   crianca   Crianca     @relation(fields: [crianca_id], references: [id])
-  updates   Progresso[]
+  progresso Progresso[]
 }
-
 
 model Progresso {
   id        Int      @id @default(autoincrement())
