@@ -1,49 +1,22 @@
-import ReactDOM from "react-dom";
 // Componente para os cards de resumo do topo
 function SummaryCard({ icon: Icon, label, value, tooltip }: { icon: React.ElementType; label: string; value: number; tooltip: string }) {
-  const [showTooltip, setShowTooltip] = React.useState(false);
-  const cardRef = React.useRef<HTMLDivElement>(null);
-  const [tooltipPos, setTooltipPos] = React.useState<{left: number, top: number}>({left: 0, top: 0});
-
-  React.useEffect(() => {
-    if (showTooltip && cardRef.current) {
-      const rect = cardRef.current.getBoundingClientRect();
-      setTooltipPos({
-        left: rect.left + rect.width / 2,
-        top: rect.top - 12 // 12px acima do card
-      });
-    }
-  }, [showTooltip]);
-
   return (
-    <>
-      <div
-        ref={cardRef}
-        className="bg-white shadow rounded-2xl p-6 flex items-center gap-4 transition-all duration-200 relative group cursor-pointer border border-transparent hover:-translate-y-2 focus:-translate-y-2 hover:bg-white hover:shadow-xl hover:border-green-400 min-h-[110px]"
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        onFocus={() => setShowTooltip(true)}
-        onBlur={() => setShowTooltip(false)}
-        tabIndex={0}
-      >
-        <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-green-100 bg-green-50 group-hover:bg-green-100 group-hover:border-green-400 transition-all duration-200">
-          <Icon className="h-7 w-7 text-green-600" />
+    <div className="bg-white shadow rounded-2xl p-6 flex items-center gap-4 transition-all duration-200 relative group cursor-pointer border border-transparent hover:-translate-y-2 focus:-translate-y-2 hover:bg-white hover:shadow-xl hover:border-green-400 min-h-[110px]">
+      {/* Tooltip acima do card */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-50 hidden group-hover:flex group-focus:flex flex-col items-center transition-all duration-200">
+        <div className="bg-green-800 text-white text-base rounded-xl px-6 py-3 shadow-2xl whitespace-nowrap animate-fade-in-up font-extrabold tracking-wide border-2 border-green-400 drop-shadow-lg transition-all duration-200">
+          {tooltip}
         </div>
-        <div>
-          <p className="text-2xl font-bold">{value}</p>
-          <p className="text-gray-600 font-medium">{label}</p>
-        </div>
+        <div className="w-4 h-4 bg-green-800 border-2 border-green-400 rotate-45 mt-1 transition-all duration-200"></div>
       </div>
-      {showTooltip && ReactDOM.createPortal(
-        <div style={{position: 'fixed', left: tooltipPos.left, top: tooltipPos.top, transform: 'translate(-50%, -100%)'}} className="z-50 flex flex-col items-center pointer-events-none">
-          <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-lg whitespace-nowrap animate-fade-in-up">
-            {tooltip}
-          </div>
-          <div className="w-3 h-3 bg-gray-900 rotate-45 mt-1"></div>
-        </div>,
-        document.body
-      )}
-    </>
+      <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-green-100 bg-green-50 group-hover:bg-green-100 group-hover:border-green-400 transition-all duration-200">
+        <Icon className="h-7 w-7 text-green-600" />
+      </div>
+      <div>
+        <p className="text-2xl font-bold">{value}</p>
+        <p className="text-gray-600 font-medium">{label}</p>
+      </div>
+    </div>
   );
 }
 
