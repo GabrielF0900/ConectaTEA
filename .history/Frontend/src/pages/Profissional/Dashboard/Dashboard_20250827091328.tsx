@@ -135,23 +135,23 @@ export default function Dashboard() {
         ].map((card, i) => (
           <div
             key={i}
-            className="bg-white shadow rounded-2xl p-6 flex items-center gap-4 transition-all duration-200 relative group cursor-pointer border border-transparent hover:-translate-y-2 focus:-translate-y-2 hover:bg-white hover:shadow-xl hover:border-green-400"
+            className="bg-white shadow-md rounded-2xl p-6 flex items-center gap-4 transition-all duration-200 hover:shadow-lg hover:ring-2 hover:ring-green-200 relative group cursor-pointer"
             tabIndex={0}
           >
-            {/* Tooltip acima do card */}
-            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-10 hidden group-hover:flex group-focus:flex flex-col items-center">
-              <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-lg whitespace-nowrap animate-fade-in-up">
-                {card.tooltip}
-              </div>
-              <div className="w-3 h-3 bg-gray-900 rotate-45 mt-1"></div>
-            </div>
-            <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-green-100 bg-green-50 group-hover:bg-green-100 group-hover:border-green-400 transition-all duration-200">
+            <div className="flex items-center justify-center w-14 h-14 bg-green-50 rounded-xl">
               {cardIcons[i]}
             </div>
             <div>
               <p className="text-2xl font-bold">{card.valor}</p>
               <p className="text-gray-600 font-medium">{card.label}</p>
               <span className="text-sm text-green-600 font-semibold">{card.sub}</span>
+            </div>
+            {/* Tooltip */}
+            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-10 hidden group-hover:flex group-focus:flex flex-col items-center">
+              <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-lg whitespace-nowrap">
+                {card.tooltip}
+              </div>
+              <div className="w-3 h-3 bg-gray-900 rotate-45 -mt-1"></div>
             </div>
           </div>
         ))}
