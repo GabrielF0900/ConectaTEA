@@ -97,6 +97,7 @@ export default function Profissionais() {
   const [tab, setTab] = useState<'todos' | 'conexoes'>('todos');
   const [searchInput, setSearchInput] = useState("");
   const [searching, setSearching] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [loggedProfissionalId, setLoggedProfissionalId] = useState<number | null>(null);
 

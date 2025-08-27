@@ -54,6 +54,7 @@ function MetaCard({ meta }: { meta: Meta }) {
 }
 import React from "react";
 import { TrendingUp, Filter, Eye, Pencil, Target, CheckCircle2, AlertTriangle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // import { useNotificacoesContext } from '../../../api/barraNotificacao';
 

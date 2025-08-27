@@ -108,11 +108,7 @@ export default function Dashboard() {
               <svg className="w-5 h-5 text-gray-400 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
             </button>
             {/* Dropdown */}
-            <div className="absolute right-0 top-14 z-20 min-w-[160px] bg-white border border-gray-200 rounded-xl shadow-lg py-2 opacity-0 pointer-events-none group-hover/profile:opacity-100 group-hover/profile:pointer-events-auto group-focus-within/profile:opacity-100 group-focus-within/profile:pointer-events-auto transition-all duration-200">
-              <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Configurações</a>
-                        <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Perfil</a>
-              <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Sair</a>
-            </div>
+            
           </div>
         </div>
       </div>

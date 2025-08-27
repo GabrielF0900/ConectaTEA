@@ -1,3 +1,4 @@
+// ...existing imports...
 // import { useNavigate } from "react-router-dom"; // Removido import duplicado
 
 // ...existing code...
@@ -74,6 +75,7 @@ export default function CadastrarCriancas() {
   };
 
   const [profissional] = useState<ProfissionalInfo>(getProfissionalInfo());
+  const [openMenu, setOpenMenu] = useState(false);
   
   // Função para criar um estado inicial limpo do formulário
   const getInitialFormData = (): CadastroCriancaFormData => ({
@@ -304,21 +306,38 @@ export default function CadastrarCriancas() {
               </svg>
             </button>
             {/* Usuário */}
-            <div className="relative flex items-center gap-2 group/profile">
-              <button className="flex items-center gap-2 focus:outline-none" tabIndex={0}>
-                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="avatar" className="w-10 h-10 rounded-full border-2 border-green-500" />
-                <div className="text-right hidden sm:block">
-                  <p className="font-semibold text-sm leading-4">{profissional.nome}</p>
-                  <span className="text-green-600 text-xs font-bold">PROFISSIONAL</span>
+            <div className="relative">
+              <button
+                onClick={() => setOpenMenu(!openMenu)}
+                className="flex items-center gap-3 focus:outline-none"
+                aria-haspopup="true"
+                aria-expanded={openMenu}
+              >
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="avatar" className="w-9 h-9 rounded-full border" />
+                <div className="text-left">
+                  <div className="font-semibold">{profissional.nome}</div>
+                  <div className="text-xs bg-green-100 text-green-600 rounded px-2 py-1">Profissional</div>
                 </div>
-                <svg className="w-5 h-5 text-gray-400 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.12 1l-4.25 4.65a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                </svg>
               </button>
-              {/* Dropdown */}
-              <div className="absolute right-0 top-14 z-20 min-w-[160px] bg-white border border-gray-200 rounded-xl shadow-lg py-2 opacity-0 pointer-events-none group-hover/profile:opacity-100 group-hover/profile:pointer-events-auto group-focus-within/profile:opacity-100 group-focus-within/profile:pointer-events-auto transition-all duration-200">
-                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Configurações</a>
-                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Perfil</a>
-                <button onClick={() => { localStorage.clear(); if (typeof window !== 'undefined') window.location.href = '/login'; }} className="block w-full text-left px-4 py-2 text-red-500 hover:bg-red-50 transition">Sair</button>
-              </div>
+
+              {openMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
+                  <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Ver Perfil</button>
+                  <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50" onClick={() => setOpenMenu(false)}>Configurações</button>
+                  <div className="border-t" />
+                  <button
+                    className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      localStorage.clear();
+                      window.location.href = '/login';
+                    }}
+                  >Sair</button>
+                </div>
+              )}
             </div>
           </div>
         </div>

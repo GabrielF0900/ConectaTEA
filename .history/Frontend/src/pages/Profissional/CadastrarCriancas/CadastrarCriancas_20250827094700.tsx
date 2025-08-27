@@ -74,6 +74,7 @@ export default function CadastrarCriancas() {
   };
 
   const [profissional] = useState<ProfissionalInfo>(getProfissionalInfo());
+  const [openMenu, setOpenMenu] = useState(false);
   
   // Função para criar um estado inicial limpo do formulário
   const getInitialFormData = (): CadastroCriancaFormData => ({

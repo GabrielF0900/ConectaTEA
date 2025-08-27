@@ -54,6 +54,7 @@ function MetaCard({ meta }: { meta: Meta }) {
 }
 import React from "react";
 import { TrendingUp, Filter, Eye, Pencil, Target, CheckCircle2, AlertTriangle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // import { useNotificacoesContext } from '../../../api/barraNotificacao';
 
@@ -182,7 +183,8 @@ const metas: Meta[] = [
   }
 ];
 export default function MetasPage() {
-  // Hooks removidos pois não são mais necessários após padronização do dropdown
+  const [openMenu, setOpenMenu] = React.useState(false);
+  const navigate = useNavigate();
   // const { notificarSucesso } = useNotificacoesContext();
   return (
     <div className="h-full bg-[#f8f9fb]">

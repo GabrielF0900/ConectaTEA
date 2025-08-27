@@ -53,7 +53,8 @@ function MetaCard({ meta }: { meta: Meta }) {
   );
 }
 import React from "react";
-import { TrendingUp, Filter, Eye, Pencil, Target, CheckCircle2, AlertTriangle } from "lucide-react";
+import { TrendingUp, Filter, Eye, Pencil, CalendarDays, Target, CheckCircle2, AlertTriangle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // import { useNotificacoesContext } from '../../../api/barraNotificacao';
 
@@ -182,41 +183,89 @@ const metas: Meta[] = [
   }
 ];
 export default function MetasPage() {
-  // Hooks removidos pois não são mais necessários após padronização do dropdown
+  const [openMenu, setOpenMenu] = React.useState(false);
+  const navigate = useNavigate();
   // const { notificarSucesso } = useNotificacoesContext();
   return (
     <div className="h-full bg-[#f8f9fb]">
       {/* Header padrão com dropdown de perfil */}
   <div className="bg-white border-b px-6 py-4 sticky top-0 z-30">
-    <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-      <div>
-        <h1 className="text-2xl font-bold">Metas</h1>
-        <p className="text-sm text-gray-500 mt-1">Gerencie as metas terapêuticas das crianças</p>
-      </div>
-      <div className="flex items-center gap-4 mt-4 md:mt-0">
-        <button className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
-          <span className="text-lg">+</span>
-          Nova Meta
-        </button>
-        <div className="relative flex items-center gap-2 group/profile">
-          <button className="flex items-center gap-2 focus:outline-none" tabIndex={0}>
-            <img src="/conectatea.svg" alt="avatar" className="w-10 h-10 rounded-full border-2 border-green-500" />
-            <div className="text-right hidden sm:block">
-              <p className="font-semibold text-sm leading-4">{localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string).name || JSON.parse(localStorage.getItem('user') as string).nome : 'Perfil'}</p>
-              <span className="text-green-600 text-xs font-bold">PROFISSIONAL</span>
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold">Metas</h1>
+            <p className="text-sm text-gray-500 mt-1">Gerencie as metas terapêuticas das crianças</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
+              <span className="text-lg">+</span>
+              Nova Meta
+            </button>
+            <div className="relative">
+              <button
+                onClick={() => setOpenMenu(!openMenu)}
+                className="flex items-center gap-3 focus:outline-none"
+                aria-haspopup="true"
+                aria-expanded={openMenu}
+              >
+                <img
+                  src="/conectatea.svg"
+                  alt="avatar"
+                  className="w-9 h-9 rounded-full border"
+                />
+                <div className="text-left">
+                  <div className="font-semibold">{localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string).name || JSON.parse(localStorage.getItem('user') as string).nome : 'Perfil'}</div>
+                  <div className="text-xs bg-green-100 text-green-600 rounded px-2 py-1">PROFISSIONAL</div>
+                </div>
+                <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.12 1l-4.25 4.65a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                </svg>
+              </button>
+              {openMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
+                  <button
+                    className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      const user = localStorage.getItem('user');
+                      let userId = null;
+                      if (user) {
+                        try {
+                          const u = JSON.parse(user);
+                          userId = u?.id ?? u?.userId ?? null;
+                        } catch { /* ignorar erro de parse do usuário */ }
+                      }
+                      if (userId) {
+                        navigate(`/profissional/perfil/${userId}`);
+                      }
+                    }}
+                  >
+                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 100 12A6 6 0 0010 2z"/></svg>
+                    Meu Perfil
+                  </button>
+                  <button
+                    className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                    onClick={() => setOpenMenu(false)}
+                  >
+                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path d="M6 2a1 1 0 000 2h8a1 1 0 100-2H6z"/></svg>
+                    Configurações
+                  </button>
+                  <div className="border-t" />
+                  <button
+                    className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      localStorage.clear();
+                      if (typeof window !== 'undefined') window.location.href = '/login';
+                    }}
+                  >
+                    Sair
+                  </button>
+                </div>
+              )}
             </div>
-            <svg className="w-5 h-5 text-gray-400 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-          </button>
-          {/* Dropdown */}
-          <div className="absolute right-0 top-14 z-20 min-w-[160px] bg-white border border-gray-200 rounded-xl shadow-lg py-2 opacity-0 pointer-events-none group-hover/profile:opacity-100 group-hover/profile:pointer-events-auto group-focus-within/profile:opacity-100 group-focus-within/profile:pointer-events-auto transition-all duration-200">
-            <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Configurações</a>
-            <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Perfil</a>
-            <button onClick={() => { localStorage.clear(); if (typeof window !== 'undefined') window.location.href = '/login'; }} className="block w-full text-left px-4 py-2 text-red-500 hover:bg-red-50 transition">Sair</button>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
       {/* Toolbar topo */}
       <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between">
