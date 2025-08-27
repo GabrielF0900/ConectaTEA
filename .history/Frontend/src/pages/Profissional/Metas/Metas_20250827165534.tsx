@@ -3,11 +3,11 @@ function SummaryCard({ icon: Icon, label, value, tooltip }: { icon: React.Elemen
   return (
     <div className="bg-white shadow rounded-2xl p-6 flex items-center gap-4 transition-all duration-200 relative group cursor-pointer border border-transparent hover:-translate-y-2 focus:-translate-y-2 hover:bg-white hover:shadow-xl hover:border-green-400 min-h-[110px]">
       {/* Tooltip acima do card */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-50 hidden group-hover:flex group-focus:flex flex-col items-center">
-        <div className="bg-green-700 text-white text-xs rounded-lg px-4 py-2 shadow-2xl whitespace-nowrap animate-fade-in-up font-bold tracking-wide border border-green-300">
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-10 hidden group-hover:flex group-focus:flex flex-col items-center">
+        <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-lg whitespace-nowrap animate-fade-in-up">
           {tooltip}
         </div>
-        <div className="w-3 h-3 bg-green-700 border border-green-300 rotate-45 mt-1"></div>
+        <div className="w-3 h-3 bg-gray-900 rotate-45 mt-1"></div>
       </div>
       <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-green-100 bg-green-50 group-hover:bg-green-100 group-hover:border-green-400 transition-all duration-200">
         <Icon className="h-7 w-7 text-green-600" />
