@@ -211,11 +211,7 @@ export default function Dashboard() {
           </div>
           <div className="space-y-4">
             {metas.map((meta, index) => (
-              <div
-                key={index}
-                className="bg-gray-50 rounded-xl px-4 py-3 transition-all duration-200 border border-transparent hover:bg-white hover:shadow-md hover:border-green-400 hover:-translate-y-1 focus:-translate-y-1 cursor-pointer"
-                tabIndex={0}
-              >
+              <div key={index} className="bg-gray-50 rounded-xl px-4 py-3">
                 <div className="flex justify-between items-center mb-1">
                   <div>
                     <p className="font-semibold text-base">{meta.nome}</p>
